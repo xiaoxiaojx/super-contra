@@ -1,0 +1,42 @@
+{
+  "name": "supercontra",
+  "version": "1.0.0",
+  "description": "a game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc webpack.config.ts --outDir webpack && webpack --config webpack/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaoxiaojx/SuperContra.git"
+  },
+  "keywords": [
+    "supercontra"
+  ],
+  "author": "xiaojiaxin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiaoxiaojx/SuperContra/issues"
+  },
+  "homepage": "https://github.com/xiaoxiaojx/SuperContra#readme",
+  "devDependencies": {
+    "@types/node": "^8.0.25",
+    "@types/react": "^16.0.5",
+    "@types/react-dom": "^15.5.4",
+    "@types/webpack": "^3.0.10",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "html-webpack-plugin": "^2.30.1",
+    "ts-loader": "^2.3.4",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.5"
+  },
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}
