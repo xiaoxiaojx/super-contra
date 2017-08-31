@@ -7,7 +7,7 @@
 		"jsx": "react",
 		"noImplicitAny": false,
 		"sourceMap": true,
-	//	"strictNullChecks": true,
+//	    "strictNullChecks": true,
 		"experimentalDecorators": true,
 		"baseUrl": "./",
 		"noUnusedLocals": true,

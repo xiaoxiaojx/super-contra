@@ -1,35 +1,50 @@
-import * as webpack from 'webpack';
-import * as path from 'path';
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const joinDir = p => path.join(__dirname, p)
+import * as webpack from "webpack";
+import * as path from "path";
+
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const hotMiddlewareScript = "webpack-hot-middleware/client?reload=true";
+const joinDir = p => path.join(__dirname, p);
+
 const config: webpack.Configuration = {
-  entry: joinDir("../src/app.tsx"),
+  entry: [hotMiddlewareScript, joinDir("../src/app.ts")],
   output: {
     path: joinDir("../dist"),
-    filename: 'js/app.bundle.js'
+    publicPath: "/",
+    filename: "js/app.bundle.js"
   },
   plugins: [
     new HtmlWebpackPlugin({
         template: joinDir("../src/index.html"),
         filename: "index.html"
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
     rules: [
-        { 
+        {
             test: /\.(tsx|ts)$/,
-            use: 'ts-loader'
+            use: "ts-loader"
         },
         {
-            test: /\.(tsx|ts|js|jsx)$/,
+            test: /\.(js|jsx)$/,
             exclude: /node_modules/,
-            loader: 'babel-loader',
+            loader: "babel-loader",
             query:
             {
-              presets:['react']
+              presets: ["react"]
             }
-        }
+        },
+        {
+          test: /\.scss$/,
+          use: [{
+              loader: "style-loader"
+          }, {
+              loader: "css-loader"
+          }, {
+              loader: "sass-loader"
+          }]
+      }
     ]
   }
 };
