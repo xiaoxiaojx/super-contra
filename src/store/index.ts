@@ -1,0 +1,1 @@
+export { default as SuperContraStore } from "./superContra";

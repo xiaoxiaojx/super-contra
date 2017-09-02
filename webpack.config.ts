@@ -6,11 +6,14 @@ const hotMiddlewareScript = "webpack-hot-middleware/client?reload=true";
 const joinDir = p => path.join(__dirname, p);
 
 const config: webpack.Configuration = {
-  entry: [hotMiddlewareScript, joinDir("../src/app.ts")],
+  entry: [hotMiddlewareScript, joinDir("../src/app.tsx")],
   output: {
     path: joinDir("../dist"),
     publicPath: "/",
     filename: "js/app.bundle.js"
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".scss"]
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -44,6 +47,10 @@ const config: webpack.Configuration = {
           }, {
               loader: "sass-loader"
           }]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: "url-loader"
       }
     ]
   }
