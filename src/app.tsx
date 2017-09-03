@@ -23,8 +23,8 @@ class App extends React.Component<AppProps, {}> {
         const { gameStatus } = store;
         return (
             <div className="appWrap">
-                { gameStatus === 0 &&  <GameStart store={store}/> }
-                { gameStatus === 1 &&  <InGame store={store} /> }
+                { gameStatus === 0 &&  <GameStart superContraStore={store}/> }
+                { gameStatus === 1 &&  <InGame superContraStore={store} /> }
             </div>
         );
     }

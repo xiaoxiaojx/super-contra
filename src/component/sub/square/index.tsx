@@ -1,45 +1,42 @@
 import * as React from "react";
 import {
-    getUrl
-} from "./util";
+    QuestionWall,
+    NormalWall,
+    NormalFloor
+} from "../";
+import {
+    SquareSpeciesType,
+    SquareStatusType
+} from "../../../common/constant";
 import "./index.scss";
 
 interface SquareProps {
-    imgName?: string;
-    width?: string;
-    height?: string;
-    position?: string;
+    squareSpecies: SquareSpeciesType;
+    squareStatus?: SquareStatusType;
 }
 
 class Square extends React.Component<SquareProps, {}> {
     static defaultProps: SquareProps = {
-        imgName: "",
-        width: "32px",
-        height: "32px",
-        position: ""
+        squareSpecies: 0,
+        squareStatus: 0
     };
+
     render() {
-        const { imgName, width, height, position } = this.props;
-        const positionStyle =
-            position ?
-                {
-                    backgroundPosition: position
-                }
-            :   {};
-        const style =
-            imgName ?
-                Object.assign({
-                    width,
-                    height,
-                    backgroundImage: getUrl(imgName),
-                }, positionStyle)
-            :
-                {
-                    width,
-                    height
-                };
+        const { squareSpecies } = this.props;
         return (
-            <div className="squareWrap" style={style}>
+            <div className="squareWrap">
+                {
+                    squareSpecies === 1 &&
+                    <NormalFloor />
+                }
+                {
+                    squareSpecies === 2 &&
+                    <QuestionWall />
+                }
+                {
+                    squareSpecies === 3 &&
+                    <NormalWall />
+                }
             </div>
         );
     }

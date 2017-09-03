@@ -9,7 +9,7 @@ import {
 import "./index.scss";
 
 interface GameStartProps {
-    store: SuperContraStore;
+    superContraStore: SuperContraStore;
 }
 
 @observer
@@ -26,13 +26,13 @@ class GameStart extends React.Component<GameStartProps, {}> {
         this.destroy();
     }
     destroy(): void {
-        console.log("游戏开始! GameStartComponent destroy ....");
+        console.log("游戏开始! GameStart Component destroy ....");
         window.removeEventListener("keydown", this.onkeydownHandle);
     }
     onkeydownHandle(e: KeyboardEvent): void {
         const keyCode: KeyCodeType = e.keyCode;
-        const {  store } = this.props;
-        const { updateGameStatus } = store;
+        const {  superContraStore } = this.props;
+        const { updateGameStatus } = superContraStore;
         switch ( keyCode ) {
             case 72:
                 updateGameStatus(1);

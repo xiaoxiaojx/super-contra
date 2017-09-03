@@ -5,3 +5,15 @@ export enum KeyCodeType {
     "J" = 74,
     "H" = 72,
 }
+
+export enum SquareSpeciesType {
+    "none" = 0,
+    "normalFloor" = 1,
+    "questionWall" = 2,
+    "normalWall" = 3
+}
+
+export enum SquareStatusType {
+    "normal" = 0,
+    "hit" = 1
+}

@@ -1,25 +1,26 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 import {
+    InGameBG
+} from "../";
+import {
     SuperContraStore
 } from "../../store";
-import {
-    Square
-} from "../sub";
 import "./index.scss";
 
 interface InGameProps {
-    store: SuperContraStore;
+    superContraStore: SuperContraStore;
 }
 
 @observer
 class InGame extends React.Component<InGameProps, {}> {
     render() {
+        const { superContraStore } = this.props;
+
         return (
             <div className="InGameWrap">
-                <Square
-                    imgName="base.png"
-                    position="0px -256px"/>
+                <InGameBG
+                    superContraStore={superContraStore}/>
             </div>
         );
     }
