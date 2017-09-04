@@ -24,8 +24,10 @@
         "node"
     ],
     "include": [
-        "*.ts",
-        "*.tsx"
+        "./**/*.ts",
+        "./**/*.tsx",
+        "./**/*.js",
+        "./**/*.jsx"
     ],
     "exclude": [
         "node_modules"

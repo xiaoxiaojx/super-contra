@@ -1,8 +1,6 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-import {
-    InGameBG
-} from "../";
+import InGameBG from "./inGameBG";
 import {
     SuperContraStore
 } from "../../store";
@@ -18,10 +16,10 @@ class InGame extends React.Component<InGameProps, {}> {
         const { superContraStore } = this.props;
 
         return (
-            <div className="InGameWrap">
-                <InGameBG
-                    superContraStore={superContraStore}/>
-            </div>
+            <InGameBG
+                    superContraStore={superContraStore}>
+                    hello
+            </InGameBG>
         );
     }
 }

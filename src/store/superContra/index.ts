@@ -1,7 +1,7 @@
 import { observable, useStrict, action } from "mobx";
 import {
     GameStatusType
-} from "./constant";
+} from "../../common/constant";
 
 useStrict(true);
 

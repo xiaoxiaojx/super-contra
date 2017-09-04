@@ -6,6 +6,13 @@ export enum KeyCodeType {
     "H" = 72,
 }
 
+export enum GameStatusType {
+    "notStart",
+    "start",
+    "pause",
+    "end"
+}
+
 export enum SquareSpeciesType {
     "none" = 0,
     "normalFloor" = 1,
@@ -16,4 +23,12 @@ export enum SquareSpeciesType {
 export enum SquareStatusType {
     "normal" = 0,
     "hit" = 1
+}
+
+export enum MushroomStatusType {
+    "normal" = 0,
+    "empty" = 1,
+    "hitRight" = 2,
+    "hitLeft" = 3,
+    "death" = 4
 }

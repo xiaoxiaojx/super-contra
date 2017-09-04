@@ -1,9 +1,7 @@
 import * as React from "react";
-import {
-    QuestionWall,
-    NormalWall,
-    NormalFloor
-} from "../";
+import QuestionWall from "./questionWall";
+import NormalWall from "./normalWall";
+import NormalFloor from "./normalFloor";
 import {
     SquareSpeciesType,
     SquareStatusType
