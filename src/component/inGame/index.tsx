@@ -2,6 +2,9 @@ import * as React from "react";
 import { observer } from "mobx-react";
 import InGameBG from "./inGameBG";
 import {
+    Contra
+} from "../sub";
+import {
     SuperContraStore
 } from "../../store";
 import "./index.scss";
@@ -18,7 +21,7 @@ class InGame extends React.Component<InGameProps, {}> {
         return (
             <InGameBG
                     superContraStore={superContraStore}>
-                    hello
+                    <Contra />
             </InGameBG>
         );
     }

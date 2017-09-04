@@ -32,3 +32,12 @@ export enum MushroomStatusType {
     "hitLeft" = 3,
     "death" = 4
 }
+
+export enum ContraDirectionType {
+    "toRight" = 0,
+    "toLeft" = 1,
+    "toTop" = 2,
+    "toBottom" = 3,
+    "toRightTop" = 4,
+    "toLeftTop" = 5
+}

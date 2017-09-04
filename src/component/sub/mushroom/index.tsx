@@ -24,8 +24,6 @@ interface MushroomState {
 class Mushroom extends React.Component<MushroomProps, MushroomState> {
     constructor(props) {
         super(props);
-
-        this.initState();
     }
     state: MushroomState = {
         left: 0,
@@ -35,7 +33,7 @@ class Mushroom extends React.Component<MushroomProps, MushroomState> {
     runInterval: number;
 
     componentDidMount() {
-        this.autoRun();
+        this.initState();
     }
     componentWillUnmount() {
         this.destroy();
@@ -57,18 +55,21 @@ class Mushroom extends React.Component<MushroomProps, MushroomState> {
             left,
             top,
             status
-        });
+        }, this.autoRun);
     }
     runCheck(cb: Function): void {
-        const { left, top } = this.state;
+        const { left, top, status } = this.state;
         if (isEmpty(left, top + 32)) {
             this.setStatus(1);
+            console.log("isEmpty...");
         }
         else if (isHitRight(left + 32, top)) {
             this.setStatus(2);
+            console.log("isHitRight...");
         }
-        else if (isHitLeft(left, top)) {
+        else if (isHitLeft(left, top) && status !== 0 && status !== 3) {
             this.setStatus(3);
+            console.log("isHitLeft...");
         }
         else {
             this.clearRunInterval();
@@ -79,27 +80,24 @@ class Mushroom extends React.Component<MushroomProps, MushroomState> {
 
     }
     runLeft(): void {
-        const { left } = this.state;
         this.runCheck(() => {
-            this.setState({
-                left: left - 1
-            });
+            this.setState(preState => ({
+                left: preState.left - 4
+            }));
         });
     }
     runBottom(): void {
-        const { top } = this.state;
         this.runCheck(() => {
-            this.setState({
-                top: top + 1
-            });
+            this.setState(preState => ({
+                top: preState.top + 4
+            }));
         });
     }
     runRight(): void {
-        const { left } = this.state;
         this.runCheck(() => {
-            this.setState({
-                left: left + 1
-            });
+            this.setState(preState => ({
+                left: preState.left + 4
+            }));
         });
     }
     autoRun(): void {
@@ -119,7 +117,7 @@ class Mushroom extends React.Component<MushroomProps, MushroomState> {
         }
     }
     render() {
-        const { left, top } = this.props;
+        const { left, top } = this.state;
 
         return (
             <div
