@@ -36,7 +36,6 @@ function createStaticSquare<TOwnProps>(options?: StaticSquareOption): ComponentD
         const styles = {...normalStyle, ...positionStyle};
         return styles;
     };
-    console.log(options);
 
     return Component =>
         class HocSquare extends React.Component<TOwnProps, HocSquareState> {

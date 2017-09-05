@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc devServer.ts --outDir static && node static/devServer.js",
-    "build": "tsc webpack.config.ts --outDir static && webpack --config static/webpack.config.js"
+    "start": "tsc devServer.ts --outDir tool && NODE_ENV=development node tool/devServer.js",
+    "build": "tsc webpack.config.ts --outDir tool && NODE_ENV=production webpack --config tool/webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -30,9 +30,11 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.5",
     "file-loader": "^0.11.2",
+    "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",

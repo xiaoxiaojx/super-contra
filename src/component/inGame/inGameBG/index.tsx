@@ -35,7 +35,7 @@ class InGameBG extends React.Component<InGameProps, InGameState> {
     state: InGameState = {
         left: 0
     };
-    moveInterval: number;
+    moveInterval: any;
 
     componentDidMount() {
         this.onkeydown();
