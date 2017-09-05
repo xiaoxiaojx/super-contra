@@ -1,1 +1,1 @@
-export { default as createStaticSquare, StaticSquareProps, StaticSquareOption } from "./staticSquare";
+export { default as WithStaticSquare, StaticSquareProps, StaticSquareOption } from "./staticSquare";

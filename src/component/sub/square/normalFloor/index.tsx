@@ -1,6 +1,6 @@
 import * as React from "react";
 import {
-    createStaticSquare,
+    WithStaticSquare,
     StaticSquareProps,
     StaticSquareOption
 } from "../../HOC";
@@ -23,6 +23,6 @@ const defaultOption: StaticSquareOption = {
     position: "0 -256px"
 };
 
-const NormalFloorWrap = createStaticSquare<NormalFloorProps>(defaultOption)(NormalFloor);
+const NormalFloorWrap = WithStaticSquare<NormalFloorProps>(defaultOption)(NormalFloor);
 
 export default NormalFloorWrap;

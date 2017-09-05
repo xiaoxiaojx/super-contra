@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
-    getDisplayName
+    getDisplayName,
+    getImageStyles
 } from "../util";
 import "./index.scss";
 
@@ -23,20 +24,7 @@ interface ComponentDecorator<TOwnProps> {
     (component: React.ComponentClass<StaticSquareProps & TOwnProps>): React.ComponentClass<TOwnProps>;
 }
 
-function createStaticSquare<TOwnProps>(options?: StaticSquareOption): ComponentDecorator<TOwnProps> {
-    const getStyles = (parm?: StaticSquareOption): React.CSSProperties => {
-        const { imageName = "", position = "" } = parm;
-        const requireImg = require(`../../../../image/${imageName}`);
-        const normalStyle = imageName ? {
-            backgroundImage: `url(${requireImg})`
-        } : {};
-        const positionStyle = position ? {
-            backgroundPosition: position
-        } : {};
-        const styles = {...normalStyle, ...positionStyle};
-        return styles;
-    };
-
+function WithStaticSquare<TOwnProps>(options?: StaticSquareOption): ComponentDecorator<TOwnProps> {
     return Component =>
         class HocSquare extends React.Component<TOwnProps, HocSquareState> {
             constructor(props) {
@@ -46,11 +34,11 @@ function createStaticSquare<TOwnProps>(options?: StaticSquareOption): ComponentD
             }
             static displayName: string = `Hoc(${getDisplayName(Component)})`;
             state: HocSquareState = {
-                styles: getStyles(options)
+                styles: getImageStyles(options)
             };
 
             changeBackground(parm: StaticSquareOption): void {
-                const styles = getStyles(parm);
+                const styles = getImageStyles(parm);
                 this.setState({ styles });
             }
             render() {
@@ -72,4 +60,4 @@ function createStaticSquare<TOwnProps>(options?: StaticSquareOption): ComponentD
         };
 }
 
-export default createStaticSquare;
+export default WithStaticSquare;
