@@ -71,6 +71,9 @@ class Mushroom extends React.Component<MushroomProps, MushroomState> {
             this.setStatus(3);
             console.log("isHitLeft...");
         }
+        else if ( status !== 0 ) {
+            this.setStatus(0);
+        }
         else {
             this.clearRunInterval();
             this.runInterval = setInterval(cb, 100);

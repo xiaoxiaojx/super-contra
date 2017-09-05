@@ -62,7 +62,7 @@ class InGameBG extends React.Component<InGameProps, InGameState> {
         }
         this.moveInterval = setInterval(() => {
             _self.setState(preState => ({
-                left: preState.left - 10
+                left: preState.left - 20
             }));
         }, 100);
     }

@@ -1,0 +1,1 @@
+export { default as createStaticSquare, StaticSquareProps, StaticSquareOption } from "./staticSquare";
