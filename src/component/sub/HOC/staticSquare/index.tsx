@@ -5,15 +5,17 @@ import {
 } from "../util";
 import "./index.scss";
 
+interface WrappedStaticSquareUtils {
+    changeBackground: (parm: StaticSquareOption) => void;
+}
+
 export interface StaticSquareOption {
     imageName?: string;
     position?: string;
 }
 
 export interface StaticSquareProps {
-    hocProps: {
-        changeBackground: (parm: StaticSquareOption) => void
-    };
+    hocProps: WrappedStaticSquareUtils;
 }
 
 interface HocSquareState {
@@ -43,17 +45,16 @@ function WithStaticSquare<TOwnProps>(options?: StaticSquareOption): ComponentDec
             }
             render() {
                 const { styles } = this.state;
-                const hocProps: StaticSquareProps = {
-                    hocProps: {
-                        changeBackground: this.changeBackground
-                    }
+                const passThroughProps: any = this.props;
+                const staticProps: WrappedStaticSquareUtils = {
+                    changeBackground: this.changeBackground
                 };
-                const allProps: any = Object.assign({}, hocProps, this.props);
 
                 return (
                     <div className="hocWrap" style={styles}>
                         <Component
-                            { ...allProps }/>
+                            hocProps={staticProps}
+                            {...passThroughProps}/>
                     </div>
                 );
             }

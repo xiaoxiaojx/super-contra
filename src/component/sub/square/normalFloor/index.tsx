@@ -11,6 +11,7 @@ interface NormalFloorProps {
 
 class NormalFloor extends React.Component< NormalFloorProps & StaticSquareProps , {}> {
     render() {
+    //    const { c } = this.props.hocProps;
         return (
             <div className="normalFloorWrap">
             </div>
