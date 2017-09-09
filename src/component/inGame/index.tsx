@@ -21,7 +21,8 @@ class InGame extends React.Component<InGameProps, {}> {
         return (
             <InGameBG
                     superContraStore={superContraStore}>
-                    <Contra />
+                    <Contra
+                        superContraStore={superContraStore}/>
             </InGameBG>
         );
     }

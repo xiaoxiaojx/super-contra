@@ -1,11 +1,13 @@
 .inGameBGWrap {
-    position: absolute;
+    position: relative;
     left: 0px;
     top: 0px;
     height: 100%;
 
     .gameBackground {
         position: absolute;
+        left: 0px;
+        top: 0px;
         z-index: 1;
         background-image: url(../../../image/bg.jpg);
     
@@ -16,7 +18,7 @@
     }
 
     .gameContent {
-        position: absolute;
+        position: relative;
         z-index: 2;
     }
 }

@@ -48,7 +48,10 @@ const config: webpack.Configuration = {
     chunkFilename: "js/[name].[hash].chunk.js"
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".scss"]
+    extensions: [".ts", ".tsx", ".js", ".scss"],
+    alias: {
+      common: joinDir("../src/common")
+    }
   },
   plugins: currentPlugins.concat([
     new HtmlWebpackPlugin({
@@ -56,7 +59,7 @@ const config: webpack.Configuration = {
         filename: "index.html"
     }),
     new webpack.DllReferencePlugin({
-      context: ".",
+      context: joinDir("../dist/build"),
       manifest: require("../dist/build/bundle.manifest.json"),
     }),
     new ExtractTextPlugin("style.css"),

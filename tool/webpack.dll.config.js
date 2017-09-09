@@ -15,12 +15,12 @@ var config = {
     output: {
         path: joinDir("../dist/build"),
         filename: "[name].js",
-        library: "[name]_library"
+        library: "[name]_[hash]"
     },
     plugins: [
         new webpack.DllPlugin({
             path: joinDir("../dist/build/bundle.manifest.json"),
-            name: "[name]_library"
+            name: "[name]_[hash]"
         })
     ]
 };

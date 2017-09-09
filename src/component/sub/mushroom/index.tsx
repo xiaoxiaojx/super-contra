@@ -3,9 +3,7 @@ import {
     MushroomStatusType
 } from "../../../common/constant";
 import {
-    isEmpty,
-    isHitRight,
-    isHitLeft
+    isHitWall
 } from "../../../common/util";
 import "./index.scss";
 
@@ -59,15 +57,15 @@ class Mushroom extends React.Component<MushroomProps, MushroomState> {
     }
     runCheck(cb: Function): void {
         const { left, top, status } = this.state;
-        if (isEmpty(left, top + 32)) {
+        if (isHitWall(left, top + 32)) {
             this.setStatus(1);
             console.log("isEmpty...");
         }
-        else if (isHitRight(left + 32, top)) {
+        else if (isHitWall(left + 32, top)) {
             this.setStatus(2);
             console.log("isHitRight...");
         }
-        else if (isHitLeft(left, top) && status !== 0 && status !== 3) {
+        else if (isHitWall(left, top) && status !== 0 && status !== 3) {
             this.setStatus(3);
             console.log("isHitLeft...");
         }

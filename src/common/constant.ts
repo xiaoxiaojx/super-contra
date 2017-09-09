@@ -34,10 +34,17 @@ export enum MushroomStatusType {
 }
 
 export enum ContraDirectionType {
-    "toRight" = 0,
+    "static" = 0,
+    "toRight" = 1,
+    "toLeft" = 2,
+    "toTop" = 3,
+    "toBottom" = 4,
+    "toRightTop" = 5,
+    "toLeftTop" = 6
+}
+
+export enum DirectionTendencyType {
+    "normal" = 0,
     "toLeft" = 1,
-    "toTop" = 2,
-    "toBottom" = 3,
-    "toRightTop" = 4,
-    "toLeftTop" = 5
+    "toRight" = 2
 }
