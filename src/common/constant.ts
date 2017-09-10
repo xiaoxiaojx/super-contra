@@ -17,7 +17,11 @@ export enum SquareSpeciesType {
     "none" = 0,
     "normalFloor" = 1,
     "questionWall" = 2,
-    "normalWall" = 3
+    "normalWall" = 3,
+    "cheeseHeadLeft" = 4,
+    "cheeseHeadRight" = 5,
+    "cheeseBodyLeft" = 6,
+    "cheeseBodyRight" = 7
 }
 
 export enum SquareStatusType {

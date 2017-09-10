@@ -12,6 +12,11 @@ interface ContraBGProps {
     top: number;
 }
 
+// const toRightBGItems = [
+//     "-140px -19px",
+//     "-140px -133px",
+//     "-187px -133px"
+// ];
 
 class ContraBG extends React.Component<ContraBGProps, {}> {
     status: ContraDirectionType = 0;

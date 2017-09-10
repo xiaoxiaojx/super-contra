@@ -2,6 +2,12 @@ import * as React from "react";
 import QuestionWall from "./questionWall";
 import NormalWall from "./normalWall";
 import NormalFloor from "./normalFloor";
+import CheeseBodyLeft from "./cheeseBodyLeft";
+import CheeseBodyRight from "./cheeseBodyRight";
+import CheeseHeadLeft from "./cheeseHeadLeft";
+import CheeseHeadRight from "./cheeseHeadRight";
+import StepsFloor from "./stepsFloor";
+
 import {
     SquareSpeciesType,
     SquareStatusType
@@ -34,6 +40,26 @@ class Square extends React.Component<SquareProps, {}> {
                 {
                     squareSpecies === 3 &&
                     <NormalWall />
+                }
+                {
+                    squareSpecies === 4 &&
+                    <CheeseHeadLeft />
+                }
+                {
+                    squareSpecies === 5 &&
+                    <CheeseHeadRight />
+                }
+                {
+                    squareSpecies === 6 &&
+                    <CheeseBodyLeft />
+                }
+                {
+                    squareSpecies === 7 &&
+                    <CheeseBodyRight />
+                }
+                {
+                    squareSpecies === 8 &&
+                    <StepsFloor />
                 }
             </div>
         );

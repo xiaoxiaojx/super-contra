@@ -1,13 +1,27 @@
 import * as React from "react";
+import {
+    WithStaticSquare,
+    StaticSquareProps,
+    StaticSquareOption
+} from "../../HOC";
 import "./index.scss";
 
-class QuestionWall extends React.Component<any, {}> {
+interface QuestionWallProps {
+}
+
+class QuestionWall extends React.Component< QuestionWallProps & StaticSquareProps , {}> {
     render() {
         return (
-            <div className="questionWallWrap">
+            <div className="normalFloorWrap">
             </div>
         );
     }
 }
 
-export default QuestionWall;
+const defaultOption: StaticSquareOption = {
+    imageName: "wen.gif"
+};
+
+const QuestionWallWrap = WithStaticSquare<QuestionWallProps>(defaultOption)(QuestionWall);
+
+export default QuestionWallWrap;

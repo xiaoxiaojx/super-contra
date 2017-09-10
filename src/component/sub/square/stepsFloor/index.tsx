@@ -4,12 +4,11 @@ import {
     StaticSquareProps,
     StaticSquareOption
 } from "../../HOC";
-import "./index.scss";
 
-interface NormalWallProps {
+interface StepsFloorProps {
 }
 
-class NormalWall extends React.Component< NormalWallProps & StaticSquareProps , {}> {
+class StepsFloor extends React.Component< StepsFloorProps & StaticSquareProps , {}> {
     render() {
         return (
             <div className="normalFloorWrap">
@@ -20,9 +19,9 @@ class NormalWall extends React.Component< NormalWallProps & StaticSquareProps , 
 
 const defaultOption: StaticSquareOption = {
     imageName: "base.png",
-    position: "-32px -256px"
+    position: "-64px -320px"
 };
 
-const NormalWallWrap = WithStaticSquare<NormalWallProps>(defaultOption)(NormalWall);
+const StepsFloorWrap = WithStaticSquare<StepsFloorProps>(defaultOption)(StepsFloor);
 
-export default NormalWallWrap;
+export default StepsFloorWrap;

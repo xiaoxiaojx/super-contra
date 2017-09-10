@@ -24,7 +24,6 @@ interface ConfigType {
     beforeJumpTop: number;
     beforeJumpLeft: number;
     jumpHeight: number;
-    jumpWidth: number;
     directionTendency: DirectionTendencyType;
 }
 
@@ -45,6 +44,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
         this.setStatus = this.setStatus.bind(this);
         this.setState = this.setState.bind(this);
         this.setConfig = this.setConfig.bind(this);
+        this.isFlightCheck =  this.isFlightCheck.bind(this);
     }
     state: ContraState = {
         status: 0,
@@ -53,8 +53,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
     };
     config: ConfigType = {
         directionTendency: 0,
-        jumpHeight: 128,
-        jumpWidth: 160,
+        jumpHeight: 160,
         beforeJumpTop: 384,
         beforeJumpLeft: 0
     };
@@ -86,8 +85,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
         });
     }
     setDirectionTendency(parm: DirectionTendencyType): void {
-        const directionTendency = { directionTendency:  parm};
-        this.setConfig(directionTendency);
+        this.setConfig({ directionTendency:  parm});
         setTimeout(() => {
             this.setConfig({directionTendency: 0});
         }, 200);
@@ -99,8 +97,18 @@ class Contra extends React.Component<ContraProps, ContraState> {
     setTopGradient(step: number): void {
         this.setState(preState => ({ top: preState.top + step }));
     }
+    getParabolaParm() {
+        const { beforeJumpTop} = this.config;
+        const c = beforeJumpTop;
+        return {
+            a: 0.9,
+            b: -25,
+            c,
+            step: 1
+        };
+    }
     updateLeftListening(nextState): void {
-        if ( nextState.left % 512 === 0 &&  this.state.left > 0) {
+        if ( nextState.left % 512 >= 500 &&  this.state.left > 0 && (this.state.status === 1 || this.state.status === 5)) {
             const { updateInGameGBLeft } = this.props.superContraStore;
             updateInGameGBLeft();
         }
@@ -147,22 +155,26 @@ class Contra extends React.Component<ContraProps, ContraState> {
         window.addEventListener("keyup", this.onkeyupHandle);
     }
     toRight(): void {
+        const _self = this;
         this.clearRunInterval();
-        this.setDirectionTendency(1);
-        const { left, top } = this.state;
+        this.setDirectionTendency(2);
         this.moveInterval = setInterval(() => {
-            if (!isHitWall(left + 32, top)) {
+            if (this.isFlightCheck(_self.state.left, _self.state.top) && !isHitWall(_self.state.left + 32, _self.state.top)) {
                 this.setLeftGradient(2);
+            } else {
+                this.setStatus(4);
             }
         }, 10);
     }
     toLeft(): void {
+        const _self = this;
         this.clearRunInterval();
-        this.setDirectionTendency(2);
-        const { left, top } = this.state;
+        this.setDirectionTendency(1);
         this.moveInterval = setInterval(() => {
-            if ( !this.isHitLeftEdge() && !isHitWall(left, top) ) {
+            if (this.isFlightCheck(_self.state.left, _self.state.top) && !this.isHitLeftEdge() && !isHitWall(_self.state.left, _self.state.top) ) {
                 this.setLeftGradient(-2);
+            } else {
+                this.setStatus(4);
             }
         }, 10);
     }
@@ -184,7 +196,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
         const _self = this;
         this.clearRunInterval();
         this.moveInterval = setInterval(() => {
-            if ( !isHitWall(_self.state.left, _self.state.top + 32) ) {
+            if ( !isHitWall(_self.state.left, _self.state.top + 32) && !isHitWall(_self.state.left + 32, _self.state.top + 32) ) {
                 this.setTopGradient(4);
             } else {
                 this.setStatus(0);
@@ -192,22 +204,92 @@ class Contra extends React.Component<ContraProps, ContraState> {
         }, 20);
     }
     toRightTop(): void {
-        const { top } = this.state;
+        const _self = this;
         const { beforeJumpTop, jumpHeight } = this.config;
         this.clearRunInterval();
         this.updateConfigJumpInfo();
         const maxHeight = beforeJumpTop - jumpHeight;
+        const {a, b, c} = this.getParabolaParm();
+        let { step } = this.getParabolaParm();
+        let isTop: boolean = true;
         this.moveInterval = setInterval(() => {
-            if ( top > maxHeight ) {
-                this.setState(preState => ({ top: preState.top - 2, left: preState.left + 1}));
-            } else {
-                if ( top < beforeJumpTop ) {
-                    this.setState(preState => ({ top: preState.top + 2, left: preState.left + 1}));
+            //  向上阶段
+            if ( _self.state.top > maxHeight && isTop ) {
+                if (  isHitWall(_self.state.left, _self.state.top) || isHitWall(_self.state.left + 32, _self.state.top) || (isHitWall(_self.state.left + 32, _self.state.top + 32) && beforeJumpTop !== _self.state.top)) {
+                    this.setStatus(4);
                 } else {
-                    this.setStatus(0);
+                    this.setState(preState => {
+                        const x = preState.left + step;
+                        const y = a * step * step + b * step + c;
+                        step += 2;
+                       return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
+                    });
                 }
             }
-        }, 10);
+            //  向下阶段
+            else {
+                isTop = false;
+                if ( isHitWall(_self.state.left + 32, _self.state.top + 32) || isHitWall(_self.state.left, _self.state.top + 32) ) {
+                    this.setStatus(0);
+                } else {
+                    this.setState(preState => {
+                        const x = preState.left + step;
+                        const y = a * step * step + b * step + c;
+                        step += 2;
+                        if ( isHitWall(x + 32, y + 32) || isHitWall(x, y + 32) ) {
+                            this.setStatus(4);
+                            return ({status: 4});
+                        }
+                        else {
+                            return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
+                        }
+                    });
+                }
+            }
+        }, 50);
+    }
+    toLeftTop() {
+        const _self = this;
+        const { beforeJumpTop, jumpHeight } = this.config;
+        this.clearRunInterval();
+        this.updateConfigJumpInfo();
+        const maxHeight = beforeJumpTop - jumpHeight;
+        const {a, b, c} = this.getParabolaParm();
+        let { step } = this.getParabolaParm();
+        let isTop: boolean = true;
+        this.moveInterval = setInterval(() => {
+            if ( _self.state.top > maxHeight && isTop ) {
+                if (  isHitWall(_self.state.left, _self.state.top) || isHitWall(_self.state.left + 32, _self.state.top)) {
+                    this.setStatus(4);
+                } else {
+                    this.setState(preState => {
+                        const x = preState.left + step;
+                        const y = a * step * step + b * Math.abs(step) + c;
+                        step -= 2;
+                       return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
+                    });
+                }
+            }
+            else {
+                isTop = false;
+                if ( isHitWall(_self.state.left + 32, _self.state.top + 32) || isHitWall(_self.state.left, _self.state.top + 32) ) {
+                    this.setStatus(0);
+                } else {
+                    this.setState(preState => {
+                        const x = preState.left + step;
+                        const y = a * step * step + b * Math.abs(step) + c;
+                        step -= 2;
+                        if ( isHitWall(x + 32, y + 32) || isHitWall(x, y + 32) ) {
+                            this.setStatus(4);
+                            return ({status: 4});
+                        }
+                        else {
+                            return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
+                        }
+                    });
+                }
+            }
+        }, 50);
     }
     statusListening(): void {
         const { status } = this.state;
@@ -230,12 +312,21 @@ class Contra extends React.Component<ContraProps, ContraState> {
             case 5:
                 this.toRightTop();
                 break;
+            case 6:
+                this.toLeftTop();
+                break;
         }
     }
     isHitLeftEdge(): boolean {
         const { inGameGBLeft } = this.props.superContraStore;
         const { left } = this.state;
         return Math.abs(inGameGBLeft) === left - 10;
+    }
+    isFlightCheck(left: number, top: number): boolean {
+        if ( !isHitWall(left + 32, top + 32) && !isHitWall(left, top + 32) ) {
+            return false;
+        }
+        return true;
     }
     clearRunInterval(): void {
         if (this.moveInterval) {
