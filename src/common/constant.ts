@@ -52,3 +52,22 @@ export enum DirectionTendencyType {
     "toLeft" = 1,
     "toRight" = 2
 }
+
+export enum TowardType {
+    "left" = 0,
+    "right" = 1
+}
+
+export interface ParabolaParmType {
+    a: number;
+    b: number;
+    c: number;
+    step: number;
+    stepVal: number;
+}
+
+export interface ConfigType {
+    beforeJumpTop: number;
+    jumpHeight: number;
+    directionTendency: DirectionTendencyType;
+}
