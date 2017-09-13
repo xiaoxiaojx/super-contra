@@ -58,6 +58,8 @@ export enum TowardType {
     "right" = 1
 }
 
+export type LevelType = 1 | 2 | 3 | 4 | 5;
+
 export interface ParabolaParmType {
     a: number;
     b: number;

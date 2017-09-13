@@ -1,5 +1,7 @@
+@import "../../../../common/config";
+
 .hocWrap {
-    width: 32px;
-    height: 32px;
+    width: $eachWidth;
+    height: $eachHeight;
     background-repeat: no-repeat;
 }

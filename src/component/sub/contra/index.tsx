@@ -99,6 +99,19 @@ class Contra extends React.Component<ContraProps, ContraState> {
     setTopGradient(step: number): void {
         this.setState(preState => ({ top: preState.top + step }));
     }
+    setPositionGradient(step: number, stepVal: number, isTop: boolean = true): void {
+        const {a, b, c} = this.getParabolaParm();
+
+        this.setState(preState => {
+            const x = preState.left + step;
+            const y = a * step * step + b * step + c;
+            if ( !isTop && (isHitWall(x + 32, y + 32) || isHitWall(x, y + 32)) ) {
+                this.setStatus(4);
+                return ({status: 4});
+            }
+           return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
+        });
+    }
     getParabolaParm(): ParabolaParmType {
         const { beforeJumpTop} = this.config;
         const c = beforeJumpTop;
@@ -211,12 +224,11 @@ class Contra extends React.Component<ContraProps, ContraState> {
     toRightTop(): void {
         const _self = this;
         const { beforeJumpTop, jumpHeight } = this.config;
+        let { step, stepVal } = this.getParabolaParm();
         this.clearRunInterval();
         this.updateConfigJumpInfo();
         this.setToward(1);
         const maxHeight = beforeJumpTop - jumpHeight;
-        const {a, b, c, stepVal} = this.getParabolaParm();
-        let { step } = this.getParabolaParm();
         let isTop: boolean = true;
         this.moveInterval = setInterval(() => {
             //  向上阶段
@@ -224,12 +236,8 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 if (  isHitWall(_self.state.left, _self.state.top) || isHitWall(_self.state.left + 32, _self.state.top) || (isHitWall(_self.state.left + 32, _self.state.top + 32) && beforeJumpTop !== _self.state.top)) {
                     this.setStatus(4);
                 } else {
-                    this.setState(preState => {
-                        const x = preState.left + step;
-                        const y = a * step * step + b * step + c;
-                        step += stepVal;
-                       return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
-                    });
+                    this.setPositionGradient(step, stepVal);
+                    step += stepVal;
                 }
             }
             //  向下阶段
@@ -238,43 +246,28 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 if ( isHitWall(_self.state.left + 32, _self.state.top + 32) || isHitWall(_self.state.left, _self.state.top + 32) ) {
                     this.setStatus(0);
                 } else {
-                    this.setState(preState => {
-                        const x = preState.left + step;
-                        const y = a * step * step + b * step + c;
-                        step += stepVal;
-                        if ( isHitWall(x + 32, y + 32) || isHitWall(x, y + 32) ) {
-                            this.setStatus(4);
-                            return ({status: 4});
-                        }
-                        else {
-                            return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
-                        }
-                    });
+                    this.setPositionGradient(step, stepVal, isTop);
+                    step += stepVal;
                 }
             }
         }, 40);
     }
-    toLeftTop() {
+    toLeftTop(): void {
         const _self = this;
         const { beforeJumpTop, jumpHeight } = this.config;
+        let { step, stepVal } = this.getParabolaParm();
         this.clearRunInterval();
         this.updateConfigJumpInfo();
         this.setToward(0);
         const maxHeight = beforeJumpTop - jumpHeight;
-        const {a, b, c, stepVal} = this.getParabolaParm();
-        let { step } = this.getParabolaParm();
         let isTop: boolean = true;
         this.moveInterval = setInterval(() => {
-            if ( _self.state.top > maxHeight && isTop ) {
+            if ( isTop && _self.state.top > maxHeight ) {
                 if (  isHitWall(_self.state.left, _self.state.top) || isHitWall(_self.state.left + 32, _self.state.top)) {
                     this.setStatus(4);
                 } else {
-                    this.setState(preState => {
-                        const x = preState.left + step;
-                        const y = a * step * step + b * Math.abs(step) + c;
-                        step -= stepVal;
-                       return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
-                    });
+                    this.setPositionGradient(step, stepVal);
+                    step -= stepVal;
                 }
             }
             else {
@@ -282,18 +275,8 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 if ( isHitWall(_self.state.left + 32, _self.state.top + 32) || isHitWall(_self.state.left, _self.state.top + 32) ) {
                     this.setStatus(0);
                 } else {
-                    this.setState(preState => {
-                        const x = preState.left + step;
-                        const y = a * step * step + b * Math.abs(step) + c;
-                        step -= stepVal;
-                        if ( isHitWall(x + 32, y + 32) || isHitWall(x, y + 32) ) {
-                            this.setStatus(4);
-                            return ({status: 4});
-                        }
-                        else {
-                            return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
-                        }
-                    });
+                    this.setPositionGradient(step, stepVal, isTop);
+                    step -= stepVal;
                 }
             }
         }, 40);

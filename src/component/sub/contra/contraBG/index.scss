@@ -1,7 +1,9 @@
+@import "../../../../common/config";
+
 .contraBGWrap {
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: $eachWidth;
+    height: $eachHeight;
     background-repeat: no-repeat;
     background-image: url(../../../../image/people.png);
     background-position: -140px -19px;

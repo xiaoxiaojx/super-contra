@@ -4,8 +4,8 @@ import { observer } from "mobx-react";
 //     KeyCodeType
 // } from "common/constant";
 import {
-    levelOneMap
-} from "common/levelMap";
+    getLevelMap
+} from "common/util";
 import {
     Square
 } from "../../sub";
@@ -90,8 +90,9 @@ class InGameBG extends React.Component<InGameProps, InGameState> {
     // }
     render() {
         const { className = "", children, superContraStore } = this.props;
-        const { inGameGBLeft } = superContraStore;
+        const { inGameGBLeft, level } = superContraStore;
         const currentClassName = className ? `inGameBGWrap ${className}` : "inGameBGWrap";
+        const levelMap = getLevelMap(level);
 
         return (
             <div
@@ -99,7 +100,7 @@ class InGameBG extends React.Component<InGameProps, InGameState> {
                 style={{left: inGameGBLeft}}>
                 <div className="gameBackground">
                     {
-                        levelOneMap.map((items, indexX) =>
+                        levelMap.map((items, indexX) =>
                             <div className="col" key={`col-${indexX}`}>
                                 {
                                     items.map((item, indexY) =>

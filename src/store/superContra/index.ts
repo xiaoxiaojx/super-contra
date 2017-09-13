@@ -1,12 +1,18 @@
 import { observable, useStrict, action } from "mobx";
 import {
-    GameStatusType
+    GameStatusType,
+    LevelType
 } from "../../common/constant";
 
 useStrict(true);
 
 class SuperContraStore {
     private couldUpdateInGameGBLeft: boolean = true;
+
+    @observable public level: LevelType = 1;
+    @action.bound public updateLevel(parm: LevelType) {
+        this.level = parm;
+    }
 
     @observable public gameStatus: GameStatusType = 0;
     @action.bound public updateGameStatus(parm: GameStatusType) {

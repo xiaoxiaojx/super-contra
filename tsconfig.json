@@ -17,7 +17,7 @@
             "es5",
             "es6"
         ]
-	},
+    },
     "types": [
         "react",
         "react-dom",

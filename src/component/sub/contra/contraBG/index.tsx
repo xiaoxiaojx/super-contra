@@ -18,25 +18,13 @@ interface ContraBGState {
     position: string;
 }
 
-const toRightBGItems = [
-    "-140px -19px",
-    "-138px -133px",
-    "-187px -133px"
-];
-
-const toLeftBGItems = [
-    "-110px -19px",
-    "-112px -133px",
-    "-63px -136px"
-];
-
 class ContraBG extends React.Component<ContraBGProps, ContraBGState> {
     constructor(props) {
         super(props);
 
         this.timeOutSetPosition = this.timeOutSetPosition.bind(this);
     }
-    state:  ContraBGState = {
+    state: ContraBGState = {
         position: "-140px -19px"
     };
     changeInterval: any;
@@ -79,10 +67,18 @@ class ContraBG extends React.Component<ContraBGProps, ContraBGState> {
         return "-110px -19px";
     }
     getToRight() {
-        return toRightBGItems;
+        return [
+            "-140px -19px",
+            "-138px -133px",
+            "-187px -133px"
+        ];
     }
     getToLeft() {
-        return toLeftBGItems;
+        return [
+            "-110px -19px",
+            "-112px -133px",
+            "-63px -136px"
+        ];
     }
     getPosition(nextProps: ContraBGProps): string | string[] {
         const { status, toward } = nextProps;
