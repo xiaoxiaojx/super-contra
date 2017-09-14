@@ -3,5 +3,6 @@
 .hocWrap {
     width: $eachWidth;
     height: $eachHeight;
+    transition: top .2s;
     background-repeat: no-repeat;
 }

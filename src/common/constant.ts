@@ -24,11 +24,6 @@ export enum SquareSpeciesType {
     "cheeseBodyRight" = 7
 }
 
-export enum SquareStatusType {
-    "normal" = 0,
-    "hit" = 1
-}
-
 export enum MushroomStatusType {
     "normal" = 0,
     "empty" = 1,
@@ -58,7 +53,17 @@ export enum TowardType {
     "right" = 1
 }
 
+export enum StaticSquareStatusType {
+    "normal" = 0,
+    "wasHit" = 1
+}
+
 export type LevelType = 1 | 2 | 3 | 4 | 5;
+
+export type GetHitWallType = boolean | {
+    col: number;
+    row: number;
+};
 
 export interface ParabolaParmType {
     a: number;
@@ -72,4 +77,9 @@ export interface ConfigType {
     beforeJumpTop: number;
     jumpHeight: number;
     directionTendency: DirectionTendencyType;
+}
+
+export interface StaticSquareManagementType {
+    type: SquareSpeciesType;
+    status: StaticSquareStatusType;
 }

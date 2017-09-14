@@ -1,4 +1,9 @@
 import * as React from "react";
+import { observer } from "mobx-react";
+import ContraBG from "./contraBG";
+import {
+    SuperContraStore
+} from "../../../store";
 import {
     KeyCodeType,
     ContraDirectionType,
@@ -6,15 +11,11 @@ import {
     ParabolaParmType,
     ConfigType,
     TowardType
-} from "common/constant";
+} from "../../../common/constant";
 import {
-    isHitWall
-} from "common/util";
-import { observer } from "mobx-react";
-import ContraBG from "./contraBG";
-import {
-    SuperContraStore
-} from "../../../store";
+    isHitWall,
+    getHitWall
+} from "../../../common/util";
 import "./index.scss";
 
 interface ContraState {
@@ -99,12 +100,13 @@ class Contra extends React.Component<ContraProps, ContraState> {
     setTopGradient(step: number): void {
         this.setState(preState => ({ top: preState.top + step }));
     }
-    setPositionGradient(step: number, stepVal: number, isTop: boolean = true): void {
+    setPositionGradient(step: number, isTop: boolean = true): void {
+        const { status } = this.state;
         const {a, b, c} = this.getParabolaParm();
 
         this.setState(preState => {
             const x = preState.left + step;
-            const y = a * step * step + b * step + c;
+            const y = status === 5 ? a * step * step + b * step + c : a * step * step + b * Math.abs(step) + c;
             if ( !isTop && (isHitWall(x + 32, y + 32) || isHitWall(x, y + 32)) ) {
                 this.setStatus(4);
                 return ({status: 4});
@@ -199,6 +201,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
     toTop(): void {
         const _self = this;
         const { beforeJumpTop, jumpHeight } = this.config;
+        const { updateStaticSquareMap } = this.props.superContraStore;
         this.clearRunInterval();
         this.updateConfigJumpInfo();
         const maxHeight = beforeJumpTop - jumpHeight;
@@ -206,6 +209,10 @@ class Contra extends React.Component<ContraProps, ContraState> {
             if ( !isHitWall(_self.state.left, _self.state.top) && !isHitWall(_self.state.left + 32, _self.state.top) && _self.state.top > maxHeight ) {
                 this.setTopGradient(-4);
             } else {
+                if ( typeof getHitWall(_self.state.left + 18, _self.state.top) === "object") {
+                    const { col, row } = getHitWall(_self.state.left + 18, _self.state.top) as any;
+                    updateStaticSquareMap(col, row, 1);
+                }
                 this.setStatus(4);
             }
         }, 10);
@@ -236,7 +243,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 if (  isHitWall(_self.state.left, _self.state.top) || isHitWall(_self.state.left + 32, _self.state.top) || (isHitWall(_self.state.left + 32, _self.state.top + 32) && beforeJumpTop !== _self.state.top)) {
                     this.setStatus(4);
                 } else {
-                    this.setPositionGradient(step, stepVal);
+                    this.setPositionGradient(step);
                     step += stepVal;
                 }
             }
@@ -246,7 +253,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 if ( isHitWall(_self.state.left + 32, _self.state.top + 32) || isHitWall(_self.state.left, _self.state.top + 32) ) {
                     this.setStatus(0);
                 } else {
-                    this.setPositionGradient(step, stepVal, isTop);
+                    this.setPositionGradient(step, isTop);
                     step += stepVal;
                 }
             }
@@ -266,7 +273,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 if (  isHitWall(_self.state.left, _self.state.top) || isHitWall(_self.state.left + 32, _self.state.top)) {
                     this.setStatus(4);
                 } else {
-                    this.setPositionGradient(step, stepVal);
+                    this.setPositionGradient(step);
                     step -= stepVal;
                 }
             }
@@ -275,7 +282,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 if ( isHitWall(_self.state.left + 32, _self.state.top + 32) || isHitWall(_self.state.left, _self.state.top + 32) ) {
                     this.setStatus(0);
                 } else {
-                    this.setPositionGradient(step, stepVal, isTop);
+                    this.setPositionGradient(step, isTop);
                     step -= stepVal;
                 }
             }

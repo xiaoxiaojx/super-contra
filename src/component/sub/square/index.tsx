@@ -7,16 +7,15 @@ import CheeseBodyRight from "./cheeseBodyRight";
 import CheeseHeadLeft from "./cheeseHeadLeft";
 import CheeseHeadRight from "./cheeseHeadRight";
 import StepsFloor from "./stepsFloor";
-
 import {
     SquareSpeciesType,
-    SquareStatusType
+    StaticSquareStatusType
 } from "../../../common/constant";
 import "./index.scss";
 
 interface SquareProps {
     squareSpecies: SquareSpeciesType;
-    squareStatus?: SquareStatusType;
+    squareStatus?: StaticSquareStatusType;
 }
 
 class Square extends React.Component<SquareProps, {}> {
@@ -24,9 +23,16 @@ class Square extends React.Component<SquareProps, {}> {
         squareSpecies: 0,
         squareStatus: 0
     };
+    shouldComponentUpdate(nextProps) {
+        const { squareSpecies, squareStatus } = this.props;
+        if ( squareSpecies === 2 && squareStatus !== nextProps.squareStatus) {
+            return true;
+        }
+        return false;
+    }
 
     render() {
-        const { squareSpecies } = this.props;
+        const { squareSpecies, squareStatus } = this.props;
         return (
             <div className="squareWrap">
                 {
@@ -35,7 +41,7 @@ class Square extends React.Component<SquareProps, {}> {
                 }
                 {
                     squareSpecies === 2 &&
-                    <QuestionWall />
+                    <QuestionWall status={squareStatus}/>
                 }
                 {
                     squareSpecies === 3 &&

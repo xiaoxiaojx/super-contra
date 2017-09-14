@@ -7,6 +7,7 @@ import "./index.scss";
 
 interface WrappedStaticSquareUtils {
     changeBackground: (parm: StaticSquareOption) => void;
+    toTopAnimate: () => void;
 }
 
 export interface StaticSquareOption {
@@ -26,28 +27,45 @@ interface ComponentDecorator<TOwnProps> {
     (component: React.ComponentClass<StaticSquareProps & TOwnProps>): React.ComponentClass<TOwnProps>;
 }
 
-function WithStaticSquare<TOwnProps>(options?: StaticSquareOption): ComponentDecorator<TOwnProps> {
+function WithStaticSquare<TOwnProps>(options: StaticSquareOption): ComponentDecorator<TOwnProps> {
     return Component =>
         class HocSquare extends React.Component<TOwnProps, HocSquareState> {
             constructor(props) {
                 super(props);
 
                 this.changeBackground = this.changeBackground.bind(this);
+                this.toTopAnimate = this.toTopAnimate.bind(this);
+                this.setState = this.setState.bind(this);
+                this.getStyles = this.getStyles.bind(this);
             }
-            static displayName: string = `Hoc(${getDisplayName(Component)})`;
+            static displayName: string = `Hoc${getDisplayName(Component)}`;
             state: HocSquareState = {
-                styles: getImageStyles(options)
+                styles: this.getStyles(options)
             };
 
+            getStyles(parm: StaticSquareOption, top: number = 0): React.CSSProperties {
+                return Object.assign({}, getImageStyles(parm), {top});
+            }
             changeBackground(parm: StaticSquareOption): void {
-                const styles = getImageStyles(parm);
+                const styles = this.getStyles(parm);
                 this.setState({ styles });
+            }
+            toTopAnimate() {
+                const styles = this.getStyles(options, 8);
+                this.setState({ styles }, () => {
+                    setTimeout(() => {
+                        this.setState({
+                            styles: this.getStyles(options, 0)
+                        });
+                    }, 200);
+                });
             }
             render() {
                 const { styles } = this.state;
                 const passThroughProps: any = this.props;
                 const staticProps: WrappedStaticSquareUtils = {
-                    changeBackground: this.changeBackground
+                    changeBackground: this.changeBackground,
+                    toTopAnimate: this.toTopAnimate
                 };
 
                 return (
