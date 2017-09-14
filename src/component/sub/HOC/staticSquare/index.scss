@@ -1,8 +1,21 @@
 @import "../../../../common/config";
 
 .hocWrap {
+    position: relative;
     width: $eachWidth;
     height: $eachHeight;
     transition: top .2s;
     background-repeat: no-repeat;
 }
+
+@keyframes toTop { 
+    0% { top: 0px; } 
+    25% { top: -10px; } 
+    50% { top: -16px; } 
+    75% { top: -10px; } 
+    100% { top: 0px; } 
+}
+
+.toTopAnimate {
+    animation: toTop 0.5s 1; 
+} 

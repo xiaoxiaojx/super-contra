@@ -42,7 +42,10 @@ class SuperContraStore {
 
     @observable public staticSquareMap: StaticSquareManagementType[][];
     @action.bound public updateStaticSquareMap(col: number, row: number, status: StaticSquareStatusType): void {
-        this.staticSquareMap[col][row].status = status;
+        const preVal = this.staticSquareMap[col][row].status;
+        if ( preVal !==  status) {
+            this.staticSquareMap[col][row].status = status;
+        }
     }
 }
 

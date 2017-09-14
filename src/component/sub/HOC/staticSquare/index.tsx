@@ -21,6 +21,7 @@ export interface StaticSquareProps {
 
 interface HocSquareState {
     styles: React.CSSProperties;
+    className: string;
 }
 
 interface ComponentDecorator<TOwnProps> {
@@ -36,40 +37,63 @@ function WithStaticSquare<TOwnProps>(options: StaticSquareOption): ComponentDeco
                 this.changeBackground = this.changeBackground.bind(this);
                 this.toTopAnimate = this.toTopAnimate.bind(this);
                 this.setState = this.setState.bind(this);
-                this.getStyles = this.getStyles.bind(this);
+                this.setStyles = this.setStyles.bind(this);
+                this.setClassName = this.setClassName.bind(this);
             }
             static displayName: string = `Hoc${getDisplayName(Component)}`;
+            initClassTimeOut: any;
+
             state: HocSquareState = {
-                styles: this.getStyles(options)
+                styles: getImageStyles(options),
+                className: ""
             };
 
-            getStyles(parm: StaticSquareOption, top: number = 0): React.CSSProperties {
-                return Object.assign({}, getImageStyles(parm), {top});
+            componentWillUnmount() {
+                this.destroy();
             }
-            changeBackground(parm: StaticSquareOption): void {
-                const styles = this.getStyles(parm);
-                this.setState({ styles });
+            destroy() {
+                this.clearInitClassTimeout();
             }
-            toTopAnimate() {
-                const styles = this.getStyles(options, 8);
-                this.setState({ styles }, () => {
-                    setTimeout(() => {
-                        this.setState({
-                            styles: this.getStyles(options, 0)
-                        });
-                    }, 200);
+            setStyles(parm: StaticSquareOption) {
+                this.setState({
+                    styles: getImageStyles(parm)
                 });
             }
+            setClassName(parm: string) {
+                this.setState({ className: parm }, () => {
+                    this.clearInitClassTimeout();
+                    this.initClassTimeOut = setTimeout(() => {
+                        this.setClassName("hocWrap");
+                    }, 1000);
+                });
+            }
+            clearInitClassTimeout() {
+                if (this.initClassTimeOut) {
+                    clearTimeout(this.initClassTimeOut);
+                    this.initClassTimeOut = 0;
+                }
+            }
+            changeBackground(parm: StaticSquareOption): void {
+                this.setStyles(parm);
+            }
+            toTopAnimate() {
+                this.setClassName("toTopAnimate");
+            }
             render() {
-                const { styles } = this.state;
+                const { styles, className } = this.state;
                 const passThroughProps: any = this.props;
+                const classNames = className ? `hocWrap ${className}` : "hocWrap";
+
+
                 const staticProps: WrappedStaticSquareUtils = {
                     changeBackground: this.changeBackground,
                     toTopAnimate: this.toTopAnimate
                 };
 
                 return (
-                    <div className="hocWrap" style={styles}>
+                    <div
+                        className={classNames}
+                        style={styles}>
                         <Component
                             hocProps={staticProps}
                             {...passThroughProps}/>
