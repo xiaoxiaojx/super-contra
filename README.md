@@ -1,9 +1,9 @@
 # [SuperContra](https://github.com/xiaoxiaojx/SuperContra)
 
-SuperContra is is a combination of Marie and super contra game
+SuperContra is a combination of Marie and super contra game
 
 ## Technology stack
-    **React** **TypeScript** **WebPack**
+**React** **TypeScript** **WebPack**
 
 ## Quick start
 1. `git clone https://github.com/xiaoxiaojx/SuperContra.git`
