@@ -16,7 +16,7 @@ export interface StaticSquareOption {
 }
 
 export interface StaticSquareProps {
-    hocProps: WrappedStaticSquareUtils;
+    hoc: WrappedStaticSquareUtils;
 }
 
 interface HocSquareState {
@@ -95,7 +95,7 @@ function WithStaticSquare<TOwnProps>(options: StaticSquareOption): ComponentDeco
                         className={classNames}
                         style={styles}>
                         <Component
-                            hocProps={staticProps}
+                            hoc={staticProps}
                             {...passThroughProps}/>
                     </div>
                 );

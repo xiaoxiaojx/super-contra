@@ -3,7 +3,8 @@ import * as ReactDom from "react-dom";
 import { observer } from "mobx-react";
 import {
     GameStart,
-    InGame
+    InGame,
+    GameOver
 } from "./component";
 import {
     SuperContraStore
@@ -23,8 +24,9 @@ class App extends React.Component<AppProps, {}> {
         const { gameStatus } = store;
         return (
             <div className="appWrap">
-                { gameStatus === 0 &&  <GameStart superContraStore={store}/> }
-                { gameStatus === 1 &&  <InGame superContraStore={store} /> }
+                { gameStatus === 0 &&  <GameStart store={store}/> }
+                { gameStatus === 1 &&  <InGame store={store} /> }
+                { gameStatus === 3 &&  <GameOver store={store} /> }
             </div>
         );
     }

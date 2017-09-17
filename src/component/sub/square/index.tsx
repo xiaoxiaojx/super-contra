@@ -1,4 +1,5 @@
 import * as React from "react";
+//  import { observer } from "mobx-react";
 import QuestionWall from "./questionWall";
 import NormalWall from "./normalWall";
 import NormalFloor from "./normalFloor";
@@ -7,6 +8,9 @@ import CheeseBodyRight from "./cheeseBodyRight";
 import CheeseHeadLeft from "./cheeseHeadLeft";
 import CheeseHeadRight from "./cheeseHeadRight";
 import StepsFloor from "./stepsFloor";
+// import {
+//     SuperContraStore
+// } from "../../../store";
 import {
     SquareSpeciesType,
     StaticSquareStatusType
@@ -14,22 +18,22 @@ import {
 import "./index.scss";
 
 interface SquareProps {
+    col: number;
+    row: number;
     squareSpecies: SquareSpeciesType;
     squareStatus?: StaticSquareStatusType;
+//    superContraStore: SuperContraStore;
 }
 
-class Square extends React.Component<SquareProps, {}> {
-    static defaultProps: SquareProps = {
-        squareSpecies: 0,
-        squareStatus: 0
-    };
-    shouldComponentUpdate(nextProps) {
-        const { squareSpecies, squareStatus } = this.props;
-        if ( squareSpecies === 2 && squareStatus !== nextProps.squareStatus) {
-            return true;
-        }
-        return false;
-    }
+//  @observer
+class Square extends React.PureComponent<SquareProps, {}> {
+    // shouldComponentUpdate(nextProps) {
+    //     const { squareSpecies, squareStatus } = this.props;
+    //     if ( squareSpecies === 2 && squareStatus !== nextProps.squareStatus) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     render() {
         const { squareSpecies, squareStatus } = this.props;

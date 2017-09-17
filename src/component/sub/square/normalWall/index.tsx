@@ -11,6 +11,7 @@ interface NormalWallProps {
 
 class NormalWall extends React.Component< NormalWallProps & StaticSquareProps , {}> {
     render() {
+        console.log("NormalWall update...");
         return (
             <div className="normalFloorWrap">
             </div>

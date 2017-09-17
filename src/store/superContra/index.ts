@@ -4,7 +4,7 @@ import {
     LevelType,
     StaticSquareManagementType,
     StaticSquareStatusType
-} from "common/constant";
+} from "../../common/constant";
 import {
     getStaticSquareMap
 } from "../../common/util";

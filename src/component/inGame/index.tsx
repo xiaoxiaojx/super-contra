@@ -10,19 +10,19 @@ import {
 import "./index.scss";
 
 interface InGameProps {
-    superContraStore: SuperContraStore;
+    store: SuperContraStore;
 }
 
 @observer
 class InGame extends React.Component<InGameProps, {}> {
     render() {
-        const { superContraStore } = this.props;
+        const { store } = this.props;
 
         return (
             <InGameBG
-                    superContraStore={superContraStore}>
+                    store={store}>
                     <Contra
-                        superContraStore={superContraStore}/>
+                        store={store}/>
             </InGameBG>
         );
     }

@@ -10,6 +10,7 @@ interface CheeseBodyLeftProps {
 
 class CheeseBodyLeft extends React.Component< CheeseBodyLeftProps & StaticSquareProps , {}> {
     render() {
+        console.log("CheeseBodyLeft update...");
         return (
             <div>
             </div>

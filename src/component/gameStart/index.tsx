@@ -9,7 +9,7 @@ import {
 import "./index.scss";
 
 interface GameStartProps {
-    superContraStore: SuperContraStore;
+    store: SuperContraStore;
 }
 
 @observer
@@ -31,8 +31,8 @@ class GameStart extends React.Component<GameStartProps, {}> {
     }
     onkeydownHandle(e: KeyboardEvent): void {
         const keyCode: KeyCodeType = e.keyCode;
-        const {  superContraStore } = this.props;
-        const { updateGameStatus } = superContraStore;
+        const {  store } = this.props;
+        const { updateGameStatus } = store;
         switch ( keyCode ) {
             case 72:
                 updateGameStatus(1);

@@ -16,7 +16,8 @@ interface QuestionWallProps {
 class QuestionWall extends React.Component< QuestionWallProps & StaticSquareProps , {}> {
     componentWillReceiveProps(nextProps) {
         if ( nextProps.status === 1 && this.props.status !== nextProps.status ) {
-            this.props.hocProps.toTopAnimate();
+            console.log(nextProps.status, this.props.status);
+            this.props.hoc.toTopAnimate();
         }
     }
 

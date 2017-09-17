@@ -62,7 +62,7 @@ const config: webpack.Configuration = {
       context: joinDir("../dist/build"),
       manifest: require("../dist/build/bundle.manifest.json"),
     }),
-    new ExtractTextPlugin("style.css"),
+    new ExtractTextPlugin("css/[name].css"),
     new webpack.NoEmitOnErrorsPlugin()
   ]),
   module: {
@@ -84,7 +84,8 @@ const config: webpack.Configuration = {
           test: /\.scss$/,
           use: ExtractTextPlugin.extract({
             fallback: "style-loader",
-            use: ["css-loader", "sass-loader"]
+            use: ["css-loader", "sass-loader"],
+            publicPath: "../"
           })
         },
         {
