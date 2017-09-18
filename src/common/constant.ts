@@ -58,6 +58,11 @@ export enum StaticSquareStatusType {
     "wasHit" = 1
 }
 
+export enum BulletStatusType {
+    "normal" = 0,
+    "death" = 1
+}
+
 export type LevelType = 1 | 2 | 3 | 4 | 5;
 
 export type GetHitWallType = boolean | {
@@ -82,4 +87,9 @@ export interface ConfigType {
 export interface StaticSquareManagementType {
     type: SquareSpeciesType;
     status: StaticSquareStatusType;
+}
+
+export interface BulletManagementType {
+    left: number;
+    top: number;
 }

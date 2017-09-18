@@ -1,6 +1,7 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 import ContraBG from "./contraBG";
+import Bullet from "../bullet";
 import {
     SuperContraStore
 } from "../../../store";
@@ -10,7 +11,8 @@ import {
     DirectionTendencyType,
     ParabolaParmType,
     ConfigType,
-    TowardType
+    TowardType,
+    BulletManagementType
 } from "../../../common/constant";
 import {
     isHitWall,
@@ -24,6 +26,7 @@ interface ContraState {
     toward: TowardType;
     left: number;
     top: number;
+    bulletMap: BulletManagementType[];
 }
 
 interface ContraProps {
@@ -43,7 +46,6 @@ class Contra extends React.Component<ContraProps, ContraState> {
         this.setStatus = this.setStatus.bind(this);
         this.setState = this.setState.bind(this);
         this.setConfig = this.setConfig.bind(this);
-        this.isFlightCheck =  this.isFlightCheck.bind(this);
         this.updateHitWallStatus = this.updateHitWallStatus.bind(this);
         this.isHitTopWall = this.isHitTopWall.bind(this);
         this.isHitBottomWall = this.isHitBottomWall.bind(this);
@@ -52,7 +54,8 @@ class Contra extends React.Component<ContraProps, ContraState> {
         status: 0,
         left: 0,
         top: 384,
-        toward: 1
+        toward: 1,
+        bulletMap: []
     };
     config: ConfigType = {
         directionTendency: 0,
@@ -60,6 +63,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
         beforeJumpTop: 384,
     };
     moveInterval: any;
+    firingBulletsInterval: any;
     updateHitWallStatusTimeOut: any;
 
     componentDidMount() {
@@ -117,19 +121,13 @@ class Contra extends React.Component<ContraProps, ContraState> {
             const x = preState.left + step;
             const y = status === 5 ? a * step * step + b * step + c : a * step * step + b * Math.abs(step) + c;
             isTop = y < preState.top;
-            if ( !isTop && this.isHitBottomWall(x, y) ) {
+            if ( !isTop && isBeyondBottom(y + 32) ) {
+                this.destroy();
+            }
+            else if ( !isTop && this.isHitBottomWall(x, y) ) {
                 this.setStatus(4);
                 return ({status: 4});
             }
-            // else if ( isTop ) {
-            //     if ( status === 5 && (this.isHitTopWall(x, y) || isHitWall(x + 32, y + 32)) ) {
-            //         this.setStatus(4);
-            //         return ({status: 4});
-            //     } else if ( status === 6 &&  (this.isHitTopWall(x, y) || isHitWall(x, y + 32))) {
-            //         this.setStatus(4);
-            //         return ({status: 4});
-            //     }
-            // }
            return ({ top: parseInt(y.toString()), left: parseInt(x.toString())});
         });
         return isTop;
@@ -184,6 +182,11 @@ class Contra extends React.Component<ContraProps, ContraState> {
                     this.setStatus(2);
                     break;
                 case 74:
+                    if ( this.isFireBullets() ) {
+                        this.firingBullets();
+                    }
+                    break;
+                case 75:
                     if ( directionTendency === 2 ) {
                         this.setStatus(5);
                     } else if (directionTendency === 1 ) {
@@ -213,7 +216,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
         this.setDirectionTendency(2);
         this.setToward(1);
         this.moveInterval = setInterval(() => {
-            if (this.isFlightCheck(_self.state.left, _self.state.top) && !isHitWall(_self.state.left + 32, _self.state.top)) {
+            if (this.isHitBottomWall(_self.state.left, _self.state.top) && !isHitWall(_self.state.left + 32, _self.state.top)) {
                 this.setLeftGradient(2);
             } else {
                 this.setStatus(4);
@@ -226,7 +229,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
         this.setDirectionTendency(1);
         this.setToward(0);
         this.moveInterval = setInterval(() => {
-            if (this.isFlightCheck(_self.state.left, _self.state.top) && !this.isHitLeftEdge() && !isHitWall(_self.state.left, _self.state.top) ) {
+            if (this.isHitBottomWall(_self.state.left, _self.state.top) && !this.isHitLeftEdge() && !isHitWall(_self.state.left, _self.state.top) ) {
                 this.setLeftGradient(-2);
             } else {
                 this.setStatus(4);
@@ -323,6 +326,22 @@ class Contra extends React.Component<ContraProps, ContraState> {
             }
         }, 40);
     }
+    firingBullets() {
+        const { bulletMap, toward } = this.state;
+        if ( toward === 0 ) {
+            bulletMap.push({
+                left: -10,
+                top: 7
+            });
+        } else {
+            bulletMap.push({
+                left: 32,
+                top: 7
+            });
+        }
+        this.setState({ bulletMap });
+
+    }
     statusListening(): void {
         const { status } = this.state;
         switch (status) {
@@ -366,16 +385,20 @@ class Contra extends React.Component<ContraProps, ContraState> {
         const { left } = this.state;
         return Math.abs(inGameGBLeft) === left - 10;
     }
-    isFlightCheck(left: number, top: number): boolean {
-        if ( !isHitWall(left + 32, top + 32) && !isHitWall(left, top + 32) ) {
-            return false;
-        }
-        return true;
+    isFireBullets(): boolean {
+        const { status } = this.state;
+        return status !== 3 && status !== 4 && status !== 5 && status !== 6;
     }
     clearMoveInterval(): void {
         if (this.moveInterval) {
             clearInterval(this.moveInterval);
             this.moveInterval = 0;
+        }
+    }
+    clearFiringBulletsInterval(): void {
+        if (this.firingBulletsInterval) {
+            clearInterval(this.firingBulletsInterval);
+            this.firingBulletsInterval = 0;
         }
     }
     clearUpdateHitWallStatusTimeOut(): void {
@@ -387,11 +410,18 @@ class Contra extends React.Component<ContraProps, ContraState> {
     destroy(): void {
         const { updateGameStatus } = this.props.store;
         this.clearMoveInterval();
+        this.clearFiringBulletsInterval();
         this.clearUpdateHitWallStatusTimeOut();
         window.removeEventListener("keydown", this.onkeydownHandle);
         window.removeEventListener("onkeyup", this.onkeyupHandle);
         console.log("英雄死亡! Contra Component destroy ....");
         updateGameStatus(3);
+    }
+    renderBullets() {
+        const { bulletMap } = this.state;
+        return bulletMap.map((bullet, index) =>
+            <Bullet {...bullet} key={`Bullet-${index}`}/>
+        );
     }
     render() {
         const { left, top, status, toward } = this.state;
@@ -402,6 +432,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 top={top}
                 status={status}
                 toward={toward}>
+                { this.renderBullets() }
             </ContraBG>
         );
     }

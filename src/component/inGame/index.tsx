@@ -14,7 +14,7 @@ interface InGameProps {
 }
 
 @observer
-class InGame extends React.Component<InGameProps, {}> {
+class InGame extends React.PureComponent<InGameProps, {}> {
     render() {
         const { store } = this.props;
 

@@ -16,7 +16,7 @@ class SuperContraStore {
         this.staticSquareMap = getStaticSquareMap(this.level);
     }
 
-    private couldUpdateInGameGBLeft: boolean = true;
+    private canUpdateInGameGBLeft: boolean = true;
 
     @observable public level: LevelType = 1;
     @action.bound public updateLevel(parm: LevelType): void {
@@ -30,12 +30,12 @@ class SuperContraStore {
 
     @observable public inGameGBLeft: number = 0;
     @action.bound public updateInGameGBLeft(): void {
-        if ( this.couldUpdateInGameGBLeft ) {
+        if ( this.canUpdateInGameGBLeft ) {
             const _self = this;
-            this.couldUpdateInGameGBLeft = false;
+            this.canUpdateInGameGBLeft = false;
             this.inGameGBLeft -= 512;
             setTimeout(() => {
-                _self.couldUpdateInGameGBLeft = true;
+                _self.canUpdateInGameGBLeft = true;
             }, 2000);
         }
     }

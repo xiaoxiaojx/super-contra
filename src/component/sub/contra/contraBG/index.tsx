@@ -2,10 +2,8 @@ import * as React from "react";
 import {
     ContraDirectionType,
     TowardType
-} from "common/constant";
+} from "../../../../common/constant";
 import "./index.scss";
-
-const image = require("../../../../image/people.png");
 
 interface ContraBGProps {
     status: ContraDirectionType;
@@ -15,17 +13,17 @@ interface ContraBGProps {
 }
 
 interface ContraBGState {
-    position: string;
+    image: string;
 }
 
 class ContraBG extends React.Component<ContraBGProps, ContraBGState> {
     constructor(props) {
         super(props);
 
-        this.timeOutSetPosition = this.timeOutSetPosition.bind(this);
+        this.timeOutSetImage = this.timeOutSetImage.bind(this);
     }
     state: ContraBGState = {
-        position: "-140px -19px"
+        image: require(`../../../../image/pright.png`)
     };
     changeInterval: any;
 
@@ -34,60 +32,74 @@ class ContraBG extends React.Component<ContraBGProps, ContraBGState> {
     }
     componentWillReceiveProps(nextProps) {
         if ( nextProps.status !== this.props.status ) {
-            const position = this.getPosition(nextProps);
-            this.timeOutSetPosition(position);
+            const image = this.getImage(nextProps);
+            this.timeOutSetImage(image);
         }
     }
-    timeOutSetPosition(parm: string | string[]) {
+    timeOutSetImage(parm: string | string[]) {
         this.clearChangeInterval();
         if ( typeof parm === "string" ) {
-            this.setPosition(parm);
+            this.setImage(parm);
         } else {
             const length = parm.length;
             let index = 0;
             this.changeInterval = setInterval(() => {
-                this.setPosition(parm[index]);
+                this.setImage(parm[index]);
                 if ( index < length - 1 ) {
                     index ++;
                 } else {
                     index = 0;
                 }
-            }, 100);
+            }, 150);
         }
     }
-    setPosition(parm: string) {
-        if ( this.state.position !==  parm) {
-            this.setState({ position: parm });
+    setImage(parm: string) {
+        if ( this.state.image !==  parm) {
+            this.setState({ image: parm });
         }
     }
-    getDefault() {
-        return "-140px -19px";
+    getStaticRight() {
+        return require(`../../../../image/pright.png`);
     }
     getStaticLeft() {
-        return "-110px -19px";
+        return require(`../../../../image/pleft.png`);
+    }
+    getToLeftTop () {
+        return [
+            require(`../../../../image/ptolefttop1.png`),
+            require(`../../../../image/ptolefttop2.png`),
+            require(`../../../../image/ptolefttop3.png`),
+        ];
+    }
+    getToRightTop () {
+        return [
+            require(`../../../../image/ptorighttop1.png`),
+            require(`../../../../image/ptorighttop2.png`),
+            require(`../../../../image/ptorighttop3.png`),
+        ];
     }
     getToRight() {
         return [
-            "-140px -19px",
-            "-138px -133px",
-            "-187px -133px"
+            require(`../../../../image/ptoright1.png`),
+            require(`../../../../image/ptoright2.png`),
+            require(`../../../../image/ptoright3.png`),
         ];
     }
     getToLeft() {
         return [
-            "-110px -19px",
-            "-112px -133px",
-            "-63px -136px"
+            require(`../../../../image/ptoleft1.png`),
+            require(`../../../../image/ptoleft2.png`),
+            require(`../../../../image/ptoleft3.png`),
         ];
     }
-    getPosition(nextProps: ContraBGProps): string | string[] {
+    getImage(nextProps: ContraBGProps): string | string[] {
         const { status, toward } = nextProps;
         switch (status) {
             case 0:
                 if ( toward === 0 ) {
                     return this.getStaticLeft();
                 }
-                return this.getDefault();
+                return this.getStaticRight();
             case 1:
                 return this.getToRight();
             case 2:
@@ -96,11 +108,13 @@ class ContraBG extends React.Component<ContraBGProps, ContraBGState> {
                 if ( toward === 0 ) {
                     return this.getStaticLeft();
                 }
-                return this.getDefault();
+                return this.getStaticRight();
+            case 5:
+                return this.getToRightTop();
             case 6:
-                return this.getStaticLeft();
+                return this.getToLeftTop();
             default:
-                return this.getDefault();
+                return this.getStaticRight();
         }
     }
     destroy() {
@@ -114,15 +128,12 @@ class ContraBG extends React.Component<ContraBGProps, ContraBGState> {
     }
     render() {
         const { left, top, children } = this.props;
-        const { position } = this.state;
-        const normalStyle = {
+        const { image } = this.state;
+        const styles = {
             left,
             top,
-            backgroundImage: `url(${image})` };
-        const positionStyle = {
-            backgroundPosition: position
+            backgroundImage: `url(${image})`
         };
-        const styles = Object.assign({}, normalStyle, positionStyle);
 
         return (
             <div

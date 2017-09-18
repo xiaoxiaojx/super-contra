@@ -27,13 +27,6 @@ interface SquareProps {
 
 //  @observer
 class Square extends React.PureComponent<SquareProps, {}> {
-    // shouldComponentUpdate(nextProps) {
-    //     const { squareSpecies, squareStatus } = this.props;
-    //     if ( squareSpecies === 2 && squareStatus !== nextProps.squareStatus) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
 
     render() {
         const { squareSpecies, squareStatus } = this.props;
