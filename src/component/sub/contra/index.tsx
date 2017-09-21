@@ -398,7 +398,6 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         updateGameStatus(3);
     }
     render() {
-        console.log("Contra update ...");
         const { left, top, status, toward } = this.state;
 
         return (

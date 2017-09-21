@@ -3,7 +3,8 @@ import { observer } from "mobx-react";
 import InGameBG from "./inGameBG";
 import {
     Contra,
-    Bullets
+    Bullets,
+    Enemy
 } from "../sub";
 import {
     SuperContraStore
@@ -18,6 +19,7 @@ interface InGameProps {
 class InGame extends React.PureComponent<InGameProps, {}> {
     render() {
         const { store } = this.props;
+        console.log(1111);
 
         return (
             <InGameBG
@@ -25,6 +27,8 @@ class InGame extends React.PureComponent<InGameProps, {}> {
                     <Contra
                         store={store}/>
                     <Bullets
+                        store={store}/>
+                    <Enemy
                         store={store}/>
             </InGameBG>
         );

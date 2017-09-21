@@ -1,13 +1,25 @@
 import * as React from "react";
 import {
-    getDisplayName
+    getDisplayName,
+    getImageStyles
 } from "../util";
+import "./index.scss";
 
-interface DynamicSquareOption {
-
+interface WrappedDynamicSquareUtils {
+    changeBackground: (parm: DynamicSquareOption) => void;
 }
 
-interface DynamicSquareProps {
+export interface DynamicSquareOption {
+    imageName?: string;
+    position?: string;
+}
+
+export interface DynamicSquareProps {
+    hoc: WrappedDynamicSquareUtils;
+}
+
+interface HocSquareState {
+    styles: React.CSSProperties;
 }
 
 interface ComponentDecorator<TOwnProps> {
@@ -16,12 +28,38 @@ interface ComponentDecorator<TOwnProps> {
 
 function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDecorator<TOwnProps> {
     return Component =>
-        class HocSquare extends React.Component<TOwnProps, {}> {
+        class HocSquare extends React.Component<TOwnProps, HocSquareState> {
             static displayName: string = `Hoc${getDisplayName(Component)}`;
+            state = {
+                styles: getImageStyles(options)
+            };
 
+            setStyles(parm: DynamicSquareOption): void {
+                this.setState({
+                    styles: getImageStyles(parm)
+                });
+            }
+            changeBackground(parm: DynamicSquareOption): void {
+                this.setStyles(parm);
+            }
+            autoMove() {
+            //    const { toward } = this.props;
+            }
             render() {
+                const { styles } = this.state;
+                const passThroughProps: any = this.props;
+                const staticProps: WrappedDynamicSquareUtils = {
+                    changeBackground: this.changeBackground
+                };
+
                 return (
-                    <Component {...this.props}/>
+                    <div
+                        className="dynamicHocWrap"
+                        style={styles}>
+                        <Component
+                            hoc={staticProps}
+                            {...passThroughProps} />
+                    </div>
                 );
             }
         };

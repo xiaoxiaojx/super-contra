@@ -62,6 +62,11 @@ export enum StaticSquareStatusType {
     "wasHit"
 }
 
+export enum DynamicSquareStatusType {
+    "normal",
+    "wasHit"
+}
+
 export enum BulletStatusType {
     "normal",
     "death"
@@ -73,6 +78,11 @@ export type GetHitWallType = boolean | {
     col: number;
     row: number;
 };
+
+export interface PositionType {
+    left: number;
+    top: number;
+}
 
 export interface ParabolaParmType {
     a: number;
@@ -91,6 +101,13 @@ export interface ContraConfigType {
 export interface StaticSquareManagementType {
     type: StaticSquareSpeciesType;
     status: StaticSquareStatusType;
+}
+
+export interface DynamicSquareManagementType {
+    type: DynamicSquareSpeciesType;
+    status: DynamicSquareStatusType;
+    toward: TowardType;
+    position: PositionType;
 }
 
 export interface BulletManagementType {

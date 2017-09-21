@@ -65,7 +65,10 @@
   position: absolute; }
 .gameOverWrap {
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  text-align: center;
+  font-size: 30px;
+  line-height: 482px; }
 .appWrap {
   width: 512px;
   height: 480px;

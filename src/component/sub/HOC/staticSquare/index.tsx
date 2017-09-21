@@ -82,7 +82,7 @@ function WithStaticSquare<TOwnProps>(options: StaticSquareOption): ComponentDeco
             render() {
                 const { styles, className } = this.state;
                 const passThroughProps: any = this.props;
-                const classNames = className ? `hocWrap ${className}` : "hocWrap";
+                const classNames = className ? `staticHocWrap ${className}` : "staticHocWrap";
 
 
                 const staticProps: WrappedStaticSquareUtils = {

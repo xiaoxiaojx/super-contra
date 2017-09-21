@@ -5,6 +5,21 @@ import {
 } from "../../../../common/constant";
 import "./index.scss";
 
+const P_RIGHT = require(`../../../../image/pright.png`);
+const P_LEFT = require(`../../../../image/pleft.png`);
+const P_TO_LEFT_TOP_1 = require(`../../../../image/ptolefttop1.png`);
+const P_TO_LEFT_TOP_2 = require(`../../../../image/ptolefttop2.png`);
+const P_TO_LEFT_TOP_3 = require(`../../../../image/ptolefttop3.png`);
+const P_TO_RIGHT_TOP_1 = require(`../../../../image/ptorighttop1.png`);
+const P_TO_RIGHT_TOP_2 = require(`../../../../image/ptorighttop2.png`);
+const P_TO_RIGHT_TOP_3 = require(`../../../../image/ptorighttop3.png`);
+const P_TO_RIGHT_1 = require(`../../../../image/ptoright1.png`);
+const P_TO_RIGHT_2 = require(`../../../../image/ptoright2.png`);
+const P_TO_RIGHT_3 = require(`../../../../image/ptoright3.png`);
+const P_TO_LEFT_1 = require(`../../../../image/ptoleft1.png`);
+const P_TO_LEFT_2 = require(`../../../../image/ptoleft2.png`);
+const P_TO_LEFT_3 = require(`../../../../image/ptoleft3.png`);
+
 interface ContraBGProps {
     status: ContraDirectionType;
     left: number;
@@ -59,37 +74,37 @@ class ContraBG extends React.PureComponent<ContraBGProps, ContraBGState> {
         }
     }
     getStaticRight() {
-        return require(`../../../../image/pright.png`);
+        return P_RIGHT;
     }
     getStaticLeft() {
-        return require(`../../../../image/pleft.png`);
+        return P_LEFT;
     }
     getToLeftTop () {
         return [
-            require(`../../../../image/ptolefttop1.png`),
-            require(`../../../../image/ptolefttop2.png`),
-            require(`../../../../image/ptolefttop3.png`),
+            P_TO_LEFT_TOP_1,
+            P_TO_LEFT_TOP_2,
+            P_TO_LEFT_TOP_3,
         ];
     }
     getToRightTop () {
         return [
-            require(`../../../../image/ptorighttop1.png`),
-            require(`../../../../image/ptorighttop2.png`),
-            require(`../../../../image/ptorighttop3.png`),
+            P_TO_RIGHT_TOP_1,
+            P_TO_RIGHT_TOP_2,
+            P_TO_RIGHT_TOP_3,
         ];
     }
     getToRight() {
         return [
-            require(`../../../../image/ptoright1.png`),
-            require(`../../../../image/ptoright2.png`),
-            require(`../../../../image/ptoright3.png`),
+            P_TO_RIGHT_1,
+            P_TO_RIGHT_2,
+            P_TO_RIGHT_3,
         ];
     }
     getToLeft() {
         return [
-            require(`../../../../image/ptoleft1.png`),
-            require(`../../../../image/ptoleft2.png`),
-            require(`../../../../image/ptoleft3.png`),
+            P_TO_LEFT_1,
+            P_TO_LEFT_2,
+            P_TO_LEFT_3,
         ];
     }
     getImage(nextProps: ContraBGProps): string | string[] {
@@ -104,6 +119,11 @@ class ContraBG extends React.PureComponent<ContraBGProps, ContraBGState> {
                 return this.getToRight();
             case 2:
                 return this.getToLeft();
+            case 3:
+                if ( toward === 0 ) {
+                    return this.getStaticLeft();
+                }
+                return this.getStaticRight();
             case 4:
                 if ( toward === 0 ) {
                     return this.getStaticLeft();

@@ -4,7 +4,8 @@ import {
     LevelType,
     StaticSquareManagementType,
     StaticSquareStatusType,
-    BulletManagementType
+    BulletManagementType,
+    DynamicSquareManagementType
 } from "../../common/constant";
 import {
     getStaticSquareMap
@@ -47,6 +48,17 @@ class SuperContraStore {
         if ( preVal !==  status) {
             this.staticSquareMap[col][row].status = status;
         }
+    }
+
+    @observable public dynamicSquareMap: DynamicSquareManagementType[] = [{type: 0, status: 0, toward: 0, position: {left: 0, top: 32}}];
+    @action.bound public  addDynamicSquare (parm: DynamicSquareManagementType) {
+        this.dynamicSquareMap.push(parm);
+    }
+    @action.bound public deleteDynamicSquare (parm: number) {
+        this.dynamicSquareMap.splice(parm, 1);
+    }
+    @action.bound public updateDynamicSquare (parm: Partial<DynamicSquareManagementType>, index: number) {
+        this.dynamicSquareMap[index] = Object.assign({}, this.dynamicSquareMap[index], parm);
     }
 
     @observable public bulletMap: Array<BulletManagementType | null> = Array(10).fill(null);

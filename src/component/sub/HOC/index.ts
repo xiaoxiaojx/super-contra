@@ -1,1 +1,2 @@
 export { default as WithStaticSquare, StaticSquareProps, StaticSquareOption } from "./staticSquare";
+export { default as WithDynamicSquare, DynamicSquareProps,  DynamicSquareOption} from "./dynamicSquare";
