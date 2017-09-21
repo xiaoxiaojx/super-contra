@@ -7,5 +7,5 @@ SuperContra is a combination of Marie and super contra game
 
 ## Quick start
 1. `git clone https://github.com/xiaoxiaojx/SuperContra.git`
-2. open dist/index.html in the browser or
+2. `open dist/index.html in the browser` or
 `yarn -> make dev -> open http://localhost:3333/ in the browser`

@@ -13,54 +13,58 @@ export enum GameStatusType {
     "end"
 }
 
-export enum SquareSpeciesType {
-    "none" = 0,
-    "normalFloor" = 1,
-    "questionWall" = 2,
-    "normalWall" = 3,
-    "cheeseHeadLeft" = 4,
-    "cheeseHeadRight" = 5,
-    "cheeseBodyLeft" = 6,
-    "cheeseBodyRight" = 7
+export enum StaticSquareSpeciesType {
+    "none",
+    "normalFloor",
+    "questionWall",
+    "normalWall",
+    "cheeseHeadLeft",
+    "cheeseHeadRight",
+    "cheeseBodyLeft",
+    "cheeseBodyRight"
+}
+
+export enum DynamicSquareSpeciesType {
+    "mushroom"
 }
 
 export enum MushroomStatusType {
-    "normal" = 0,
-    "empty" = 1,
-    "hitRight" = 2,
-    "hitLeft" = 3,
-    "death" = 4
+    "normal",
+    "empty",
+    "hitRight",
+    "hitLeft",
+    "death"
 }
 
 export enum ContraDirectionType {
-    "static" = 0,
-    "toRight" = 1,
-    "toLeft" = 2,
-    "toTop" = 3,
-    "toBottom" = 4,
-    "toRightTop" = 5,
-    "toLeftTop" = 6
+    "static",
+    "toRight",
+    "toLeft",
+    "toTop",
+    "toBottom",
+    "toRightTop",
+    "toLeftTop"
 }
 
 export enum DirectionTendencyType {
-    "normal" = 0,
-    "toLeft" = 1,
-    "toRight" = 2
+    "normal",
+    "toLeft",
+    "toRight"
 }
 
 export enum TowardType {
-    "left" = 0,
-    "right" = 1
+    "left",
+    "right"
 }
 
 export enum StaticSquareStatusType {
-    "normal" = 0,
-    "wasHit" = 1
+    "normal",
+    "wasHit"
 }
 
 export enum BulletStatusType {
-    "normal" = 0,
-    "death" = 1
+    "normal",
+    "death"
 }
 
 export type LevelType = 1 | 2 | 3 | 4 | 5;
@@ -73,23 +77,24 @@ export type GetHitWallType = boolean | {
 export interface ParabolaParmType {
     a: number;
     b: number;
-    c: number;
     step: number;
     stepVal: number;
 }
 
-export interface ConfigType {
+export interface ContraConfigType {
     beforeJumpTop: number;
     jumpHeight: number;
     directionTendency: DirectionTendencyType;
+    parabolaParm: ParabolaParmType;
 }
 
 export interface StaticSquareManagementType {
-    type: SquareSpeciesType;
+    type: StaticSquareSpeciesType;
     status: StaticSquareStatusType;
 }
 
 export interface BulletManagementType {
     left: number;
     top: number;
+    toward: TowardType;
 }

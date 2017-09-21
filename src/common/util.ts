@@ -3,7 +3,7 @@ import {
 } from "./levelMap";
 import {
     LevelType,
-    SquareSpeciesType,
+    StaticSquareSpeciesType,
     StaticSquareManagementType,
     GetHitWallType
 } from "./constant";
@@ -34,7 +34,7 @@ export function getHitWall (x: number, y: number): GetHitWallType {
     return false;
 }
 
-export function getLevelMap (level: LevelType): SquareSpeciesType[][] {
+export function getLevelMap (level: LevelType): StaticSquareSpeciesType[][] {
     switch (level) {
         case 1:
             return levelOneMap;

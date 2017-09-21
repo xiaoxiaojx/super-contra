@@ -12,7 +12,7 @@ import StepsFloor from "./stepsFloor";
 //     SuperContraStore
 // } from "../../../store";
 import {
-    SquareSpeciesType,
+    StaticSquareSpeciesType,
     StaticSquareStatusType
 } from "../../../common/constant";
 import "./index.scss";
@@ -20,7 +20,7 @@ import "./index.scss";
 interface SquareProps {
     col: number;
     row: number;
-    squareSpecies: SquareSpeciesType;
+    squareSpecies: StaticSquareSpeciesType;
     squareStatus?: StaticSquareStatusType;
 //    superContraStore: SuperContraStore;
 }

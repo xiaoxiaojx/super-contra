@@ -1,7 +1,6 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 import ContraBG from "./contraBG";
-import Bullet from "../bullet";
 import {
     SuperContraStore
 } from "../../../store";
@@ -9,10 +8,8 @@ import {
     KeyCodeType,
     ContraDirectionType,
     DirectionTendencyType,
-    ParabolaParmType,
-    ConfigType,
+    ContraConfigType,
     TowardType,
-    BulletManagementType
 } from "../../../common/constant";
 import {
     isHitWall,
@@ -26,7 +23,6 @@ interface ContraState {
     toward: TowardType;
     left: number;
     top: number;
-    bulletMap: BulletManagementType[];
 }
 
 interface ContraProps {
@@ -34,37 +30,34 @@ interface ContraProps {
 }
 
 @observer
-class Contra extends React.Component<ContraProps, ContraState> {
+class Contra extends React.PureComponent<ContraProps, ContraState> {
     constructor(props) {
         super(props);
 
-        this.onkeydownHandle = this.onkeydownHandle.bind(this);
-        this.onkeyupHandle = this.onkeyupHandle.bind(this);
-        this.setLeftGradient = this.setLeftGradient.bind(this);
-        this.setTopGradient = this.setTopGradient.bind(this);
-        this.isHitLeftEdge = this.isHitLeftEdge.bind(this);
-        this.setStatus = this.setStatus.bind(this);
-        this.setState = this.setState.bind(this);
-        this.setConfig = this.setConfig.bind(this);
-        this.updateHitWallStatus = this.updateHitWallStatus.bind(this);
-        this.isHitTopWall = this.isHitTopWall.bind(this);
-        this.isHitBottomWall = this.isHitBottomWall.bind(this);
+        const methodItems: Array<string> = ["onkeydownHandle", "onkeyupHandle", "setLeftGradient", "setTopGradient", "isHitLeftEdge",
+            "setStatus", "setState", "setConfig", "updateHitWallStatus", "isHitTopWall", "isHitBottomWall"];
+        methodItems.forEach(method => this[method] = this[method].bind(this));
     }
     state: ContraState = {
         status: 0,
         left: 0,
         top: 384,
         toward: 1,
-        bulletMap: []
     };
-    config: ConfigType = {
+    config: ContraConfigType = {
         directionTendency: 0,
         jumpHeight: 160,
         beforeJumpTop: 384,
+        parabolaParm: {
+            a: 1.2,
+            b: -30,
+            step: 1,
+            stepVal: 2
+        }
     };
     moveInterval: any;
-    firingBulletsInterval: any;
     updateHitWallStatusTimeOut: any;
+    canFiringBullets: boolean = true;
 
     componentDidMount() {
         this.onkeydown();
@@ -73,16 +66,20 @@ class Contra extends React.Component<ContraProps, ContraState> {
     componentWillUnmount() {
         this.destroy();
     }
-    shouldComponentUpdate(nextProps, nextState) {
+    componentWillUpdate(nextProps, nextState) {
         this.updateLeftListening(nextState);
-        if ( nextState !== this.state ) {
-            return true;
-        }
-        return false;
     }
-    setConfig(parm: Partial<ConfigType>) {
+    shouldComponentUpdate(nextProps, nextState) {
+        const { status, left, top, toward } = this.state;
+        return nextState.status !== status ||
+            nextState.left !== left ||
+            nextState.top !== top ||
+            nextState.toward !== toward;
+    }
+    setConfig(parm: Partial<ContraConfigType>): ContraConfigType {
         const currentConfig = Object.assign({}, this.config, parm);
         this.config = currentConfig;
+        return currentConfig;
     }
     setToward(parm: TowardType): void {
         if ( this.state.toward !== parm ) {
@@ -114,7 +111,8 @@ class Contra extends React.Component<ContraProps, ContraState> {
     }
     setPositionGradient(step: number): boolean {
         const { status } = this.state;
-        const {a, b, c} = this.getParabolaParm();
+        const {a, b} = this.config.parabolaParm;
+        const c  = this.config.beforeJumpTop;
         let isTop: boolean = true;
 
         this.setState(preState => {
@@ -132,39 +130,20 @@ class Contra extends React.Component<ContraProps, ContraState> {
         });
         return isTop;
     }
-    getParabolaParm(): ParabolaParmType {
-        const { beforeJumpTop} = this.config;
-        const c = beforeJumpTop;
-        return {
-            a: 1.2,
-            b: -30,
-            c,
-            step: 1,
-            stepVal: 2
-        };
-    }
     updateLeftListening(nextState): void {
         if ( nextState.left % 512 >= 490 &&  this.state.left > 0 && (this.state.status === 1 || this.state.status === 5)) {
             const { updateInGameGBLeft } = this.props.store;
             updateInGameGBLeft();
         }
     }
-    updateConfigJumpInfo(): ConfigType {
-        const { top } = this.state;
-        const currentConfig = Object.assign({}, this.config, {beforeJumpTop: top});
-        this.config = currentConfig;
-        return currentConfig;
-    }
     updateHitWallStatus(): void {
         const { updateStaticSquareMap } = this.props.store;
         const { left, top } = this.state;
         if ( typeof getHitWall(left + 18, top) === "object") {
-            console.log(111);
             const { col, row } = getHitWall(left + 18, top) as any;
             updateStaticSquareMap(col, row, 1);
             this.clearUpdateHitWallStatusTimeOut();
             this.updateHitWallStatusTimeOut = setTimeout(() => {
-                console.log(222);
                 updateStaticSquareMap(col, row, 0);
             }, 1000);
         }
@@ -238,7 +217,7 @@ class Contra extends React.Component<ContraProps, ContraState> {
     }
     toTop(): void {
         const _self = this;
-        const { beforeJumpTop, jumpHeight } = this.updateConfigJumpInfo();
+        const { beforeJumpTop, jumpHeight } = this.setConfig({ beforeJumpTop: this.state.top });
         const maxHeight = beforeJumpTop - jumpHeight;
         this.clearMoveInterval();
         this.moveInterval = setInterval(() => {
@@ -266,8 +245,8 @@ class Contra extends React.Component<ContraProps, ContraState> {
     }
     toRightTop(): void {
         const _self = this;
-        const { beforeJumpTop } = this.updateConfigJumpInfo();
-        let { step, stepVal } = this.getParabolaParm();
+        const { beforeJumpTop, parabolaParm } = this.setConfig({ beforeJumpTop: this.state.top });
+        let { step, stepVal } = parabolaParm;
         this.clearMoveInterval();
         this.setToward(1);
         let isTop: boolean = true;
@@ -298,8 +277,8 @@ class Contra extends React.Component<ContraProps, ContraState> {
     }
     toLeftTop(): void {
         const _self = this;
-        const { beforeJumpTop } = this.updateConfigJumpInfo();
-        let { step, stepVal } = this.getParabolaParm();
+        const { beforeJumpTop, parabolaParm } = this.setConfig({ beforeJumpTop: this.state.top });
+        let { step, stepVal } = parabolaParm;
         this.clearMoveInterval();
         this.setToward(0);
         let isTop: boolean = true;
@@ -327,20 +306,28 @@ class Contra extends React.Component<ContraProps, ContraState> {
         }, 40);
     }
     firingBullets() {
-        const { bulletMap, toward } = this.state;
-        if ( toward === 0 ) {
-            bulletMap.push({
-                left: -10,
-                top: 7
-            });
-        } else {
-            bulletMap.push({
-                left: 32,
-                top: 7
-            });
+        const _self = this;
+        const { toward, left, top } = this.state;
+        const { addBullet } = this.props.store;
+        if ( this.canFiringBullets) {
+            this.canFiringBullets = false;
+            if ( toward === 0 ) {
+                addBullet({
+                    left: left - 10,
+                    top: top + 7,
+                    toward
+                });
+            } else {
+                addBullet({
+                    left: left + 32,
+                    top: top + 7,
+                    toward
+                });
+            }
+            setTimeout(() => {
+                _self.canFiringBullets = true;
+            }, 100);
         }
-        this.setState({ bulletMap });
-
     }
     statusListening(): void {
         const { status } = this.state;
@@ -395,12 +382,6 @@ class Contra extends React.Component<ContraProps, ContraState> {
             this.moveInterval = 0;
         }
     }
-    clearFiringBulletsInterval(): void {
-        if (this.firingBulletsInterval) {
-            clearInterval(this.firingBulletsInterval);
-            this.firingBulletsInterval = 0;
-        }
-    }
     clearUpdateHitWallStatusTimeOut(): void {
         if (this.updateHitWallStatusTimeOut) {
             clearTimeout(this.updateHitWallStatusTimeOut);
@@ -410,20 +391,14 @@ class Contra extends React.Component<ContraProps, ContraState> {
     destroy(): void {
         const { updateGameStatus } = this.props.store;
         this.clearMoveInterval();
-        this.clearFiringBulletsInterval();
         this.clearUpdateHitWallStatusTimeOut();
         window.removeEventListener("keydown", this.onkeydownHandle);
         window.removeEventListener("onkeyup", this.onkeyupHandle);
         console.log("英雄死亡! Contra Component destroy ....");
         updateGameStatus(3);
     }
-    renderBullets() {
-        const { bulletMap } = this.state;
-        return bulletMap.map((bullet, index) =>
-            <Bullet {...bullet} key={`Bullet-${index}`}/>
-        );
-    }
     render() {
+        console.log("Contra update ...");
         const { left, top, status, toward } = this.state;
 
         return (
@@ -432,7 +407,6 @@ class Contra extends React.Component<ContraProps, ContraState> {
                 top={top}
                 status={status}
                 toward={toward}>
-                { this.renderBullets() }
             </ContraBG>
         );
     }

@@ -3,7 +3,8 @@ import {
     GameStatusType,
     LevelType,
     StaticSquareManagementType,
-    StaticSquareStatusType
+    StaticSquareStatusType,
+    BulletManagementType
 } from "../../common/constant";
 import {
     getStaticSquareMap
@@ -46,6 +47,19 @@ class SuperContraStore {
         if ( preVal !==  status) {
             this.staticSquareMap[col][row].status = status;
         }
+    }
+
+    @observable public bulletMap: Array<BulletManagementType | null> = Array(10).fill(null);
+    @action.bound public addBullet (parm: BulletManagementType) {
+        for (let i = 0; i < this.bulletMap.length; i ++) {
+            if (!this.bulletMap[i]) {
+                this.bulletMap[i] = parm;
+                return;
+            }
+        }
+    }
+    @action.bound public deleteBullet (parm: number) {
+        this.bulletMap[parm] = null;
     }
 }
 

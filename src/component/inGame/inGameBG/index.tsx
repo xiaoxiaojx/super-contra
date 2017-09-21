@@ -18,7 +18,6 @@ interface InGameProps {
 }
 
 interface InGameState {
-    left: number;
 }
 
 @observer

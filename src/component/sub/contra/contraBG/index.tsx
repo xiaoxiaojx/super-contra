@@ -16,7 +16,7 @@ interface ContraBGState {
     image: string;
 }
 
-class ContraBG extends React.Component<ContraBGProps, ContraBGState> {
+class ContraBG extends React.PureComponent<ContraBGProps, ContraBGState> {
     constructor(props) {
         super(props);
 
