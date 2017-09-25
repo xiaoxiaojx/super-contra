@@ -19,7 +19,6 @@ interface InGameProps {
 class InGame extends React.PureComponent<InGameProps, {}> {
     render() {
         const { store } = this.props;
-        console.log(1111);
 
         return (
             <InGameBG

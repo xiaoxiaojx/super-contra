@@ -11,6 +11,7 @@ import {
 } from "../../../../common/constant";
 
 interface MushroomProps {
+    index: number;
     status: DynamicSquareStatusType;
     toward: TowardType;
     position: PositionType;

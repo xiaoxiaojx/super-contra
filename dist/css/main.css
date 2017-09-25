@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   background-image: url(../images/21ec6a4a.startPage.png); }
-.hocWrap {
+.staticHocWrap {
   position: relative;
   width: 32px;
   height: 32px;
@@ -23,6 +23,11 @@
 
 .toTopAnimate {
   animation: toTop 0.5s 1; }
+.dynamicHocWrap {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat; }
 .squareWrap {
   width: 32px;
   height: 32px; }

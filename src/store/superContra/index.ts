@@ -50,7 +50,7 @@ class SuperContraStore {
         }
     }
 
-    @observable public dynamicSquareMap: DynamicSquareManagementType[] = [{type: 0, status: 0, toward: 0, position: {left: 0, top: 32}}];
+    @observable public dynamicSquareMap: DynamicSquareManagementType[] = [{type: 0, status: 0, toward: 1, position: {left: 0, top: 32}}];
     @action.bound public  addDynamicSquare (parm: DynamicSquareManagementType) {
         this.dynamicSquareMap.push(parm);
     }

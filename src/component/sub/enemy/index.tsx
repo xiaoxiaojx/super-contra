@@ -28,6 +28,7 @@ class Enemy extends React.Component<EnemyProps, {}> {
                         switch (item.type) {
                             case 0 :
                                 return <Mushroom
+                                    index={index}
                                     key={`Mushroom-${index}`}
                                     status={status}
                                     toward={toward}

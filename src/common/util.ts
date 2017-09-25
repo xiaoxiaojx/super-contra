@@ -14,7 +14,9 @@ export function isHitWall (x: number, y: number): boolean {
     }
     const row = x - 1 % 32 === 0 ? x - 1 / 32 : Math.floor(x / 32);
     const col = y - 1 % 32 === 0 ? y - 1 / 32 : Math.floor(y / 32);
-    return levelOneMap[col][row] !== 0;
+    return levelOneMap.length > col &&
+    levelOneMap[col].length > row &&
+    levelOneMap[col][row] !== 0;
 }
 
 export function isBeyondBottom(y: number): boolean {
