@@ -87,8 +87,8 @@ class Bullet extends React.Component<BulletProps, BulletState> {
     isBeyondDistance() {
         const { store, index } = this.props;
         const { left } = this.state;
-        const { bulletMap } = store;
-        return !bulletMap[index] || left < bulletMap[index].left - 512 || left > bulletMap[index].left + 512;
+        const { bulletMap, inGameGBLeft } = store;
+        return !bulletMap[index] || left < inGameGBLeft || left > inGameGBLeft + 512;
     }
     initState() {
         const { left, top, toward } = this.props;

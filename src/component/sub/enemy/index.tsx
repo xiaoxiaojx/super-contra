@@ -19,7 +19,7 @@ class Enemy extends React.Component<EnemyProps, {}> {
         updateDynamicSquare({position}, index);
     }
     render() {
-        const { dynamicSquareMap } = this.props.store;
+        const { dynamicSquareMap, inGameGBLeft, deleteDynamicSquare } = this.props.store;
         return (
             <div>
                 {
@@ -33,7 +33,9 @@ class Enemy extends React.Component<EnemyProps, {}> {
                                     status={status}
                                     toward={toward}
                                     position={position}
-                                    updatePosition={this.updatePosition.bind(this)} />;
+                                    updatePosition={this.updatePosition.bind(this)}
+                                    inGameGBLeft={inGameGBLeft}
+                                    deleteDynamicSquare={deleteDynamicSquare} />;
                             default :
                                 return null;
                         }

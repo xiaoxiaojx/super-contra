@@ -15,7 +15,9 @@ interface MushroomProps {
     status: DynamicSquareStatusType;
     toward: TowardType;
     position: PositionType;
+    inGameGBLeft: number;
     updatePosition: (position: PositionType, index: number) => void;
+    deleteDynamicSquare: (parm: number) => void;
 }
 
 class Mushroom extends React.Component<MushroomProps & DynamicSquareProps, {}> {

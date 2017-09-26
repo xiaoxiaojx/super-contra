@@ -5,9 +5,9 @@
     height: 100%;
 
     .gameBackground {
-        position: absolute;
-        left: 0px;
-        top: 0px;
+        position: fixed;
+        top: 100px;
+        left: 30%;;
         z-index: 1;
         background-image: url(../../../image/bg.jpg);
     

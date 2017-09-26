@@ -1,8 +1,5 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-// import {
-//     KeyCodeType
-// } from "common/constant";
 import {
     Square
 } from "../../sub";
@@ -22,21 +19,22 @@ interface InGameState {
 
 @observer
 class InGameBG extends React.Component<InGameProps, InGameState> {
-    // getLazyLoadMap() {
-    //     const { inGameGBLeft, staticSquareMap } = this.props.store;
-    //     const initArray = [];
-    //     const row = 16;
-    //     const offset = inGameGBLeft / 512 * row;
-    //     return staticSquareMap.reduce((preVal, currentVal) => {
-    //         const current = currentVal.splice(offset, row);
-    //         preVal.push(current);
-    //         return preVal;
-    //     }, initArray);
-    // }
+    getLazyLoadMap() {
+        const { staticSquareMap, inGameGBLeft } = this.props.store;
+        const limit = 16;
+        const offset = Math.abs(inGameGBLeft) / 512 * 16;
+        const initArray = [];
+        return staticSquareMap.reduce((preVal, currentVal) => {
+            const items = [...currentVal];
+            const current = items.splice(offset, limit);
+            preVal.push(current);
+            return preVal;
+        }, initArray);
+    }
     render() {
         const { className = "", children, store } = this.props;
-        const { inGameGBLeft, staticSquareMap } = store;
-        //  const lazyLoadMap = this.getLazyLoadMap();
+        const { inGameGBLeft } = store;
+        const lazyLoadMap = this.getLazyLoadMap();
         const currentClassName = className ? `inGameBGWrap ${className}` : "inGameBGWrap";
 
         return (
@@ -45,7 +43,7 @@ class InGameBG extends React.Component<InGameProps, InGameState> {
                 style={{left: inGameGBLeft}}>
                 <div className="gameBackground">
                     {
-                        staticSquareMap.map((items, indexX) =>
+                        lazyLoadMap.map((items, indexX) =>
                             <div className="col" key={`col-${indexX}`}>
                                 {
                                     items.map((item, indexY) =>

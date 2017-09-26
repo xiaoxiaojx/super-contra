@@ -3,8 +3,9 @@
 .appWrap {
     width: $usefulAreaWidth;
     height: $usefulAreaHeight;
-    position: relative;
+    position: fixed;
     overflow: hidden;
     border: 1px solid #ccc;
-    margin: 100px auto;
+    top: 100px;
+    left: 30%;
 }

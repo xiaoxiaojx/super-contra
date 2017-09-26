@@ -5,7 +5,7 @@ import {
     StaticSquareManagementType,
     StaticSquareStatusType,
     BulletManagementType,
-    DynamicSquareManagementType
+    DynamicSquareManagementType,
 } from "../../common/constant";
 import {
     getStaticSquareMap

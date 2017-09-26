@@ -65,11 +65,15 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
             }
             toRight(): void {
                 const _self = this;
+                const { inGameGBLeft } = this.props as any;
                 this.clearMoveInterval();
                 this.moveInterval = setInterval(() => {
                     const { position } = _self.props as any;
                     const { left, top } = position;
-                    if (_self.isHitBottomWall(left, top) && !isHitWall(left + 32, top)) {
+                    if ( left < inGameGBLeft || left > inGameGBLeft + 512 ) {
+                        _self.destroy();
+                    }
+                    else if (_self.isHitBottomWall(left, top) && !isHitWall(left + 32, top)) {
                         _self.setLeftGradient(2);
                     }
                     else if (isHitWall(left + 32, top)) {
@@ -82,11 +86,15 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
             }
             toLeft(): void {
                 const _self = this;
+                const { inGameGBLeft } = this.props as any;
                 this.clearMoveInterval();
                 this.moveInterval = setInterval(() => {
                     const { position } = _self.props as any;
                     const { left, top } = position;
-                    if (_self.isHitBottomWall(left, top) && !isHitWall(left, top)) {
+                    if ( left < inGameGBLeft || left > inGameGBLeft + 512 ) {
+                        _self.destroy();
+                    }
+                    else if (_self.isHitBottomWall(left, top) && !isHitWall(left, top)) {
                         _self.setLeftGradient(-2);
                     }
                     else if (isHitWall(left, top)) {
@@ -150,7 +158,9 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 }
             }
             destroy() {
+                const { deleteDynamicSquare, index } = this.props as any;
                 this.clearMoveInterval();
+                deleteDynamicSquare(index);
             }
             clearMoveInterval(): void {
                 if (this.moveInterval) {
