@@ -66,11 +66,9 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
     componentWillUnmount() {
         this.destroy();
     }
-    componentWillUpdate(nextProps, nextState) {
-        this.updateLeftListening(nextState);
-    }
     shouldComponentUpdate(nextProps, nextState) {
         const { status, left, top, toward } = this.state;
+        this.updateLeftListening(nextState);
         return nextState.status !== status ||
             nextState.left !== left ||
             nextState.top !== top ||
@@ -122,7 +120,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
             if ( !isTop && isBeyondBottom(y + 32) ) {
                 this.destroy();
             }
-            else if ( !isTop && this.isHitBottomWall(x, y) ) {
+            else if ( !isTop && this.isHitBottomWall(x, y) && !this.isHitLeftEdge() ) {
                 this.setStatus(4);
                 return ({status: 4});
             }
@@ -137,15 +135,20 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         }
     }
     updateHitWallStatus(): void {
-        const { updateStaticSquareMap } = this.props.store;
+        const { updateStaticSquareMap, staticSquareMap } = this.props.store;
         const { left, top } = this.state;
         if ( typeof getHitWall(left + 18, top) === "object") {
             const { col, row } = getHitWall(left + 18, top) as any;
-            updateStaticSquareMap(col, row, 1);
-            this.clearUpdateHitWallStatusTimeOut();
-            this.updateHitWallStatusTimeOut = setTimeout(() => {
-                updateStaticSquareMap(col, row, 0);
-            }, 1000);
+            if ( staticSquareMap[col][row].type === 2) {
+                updateStaticSquareMap(col, row, 1);
+                this.clearUpdateHitWallStatusTimeOut();
+                this.updateHitWallStatusTimeOut = setTimeout(() => {
+                    updateStaticSquareMap(col, row, 0);
+                }, 1000);
+            } else if (staticSquareMap[col][row].type === 9 && staticSquareMap[col][row].status === 0) {
+                updateStaticSquareMap(col, row, 1);
+                this.createGrowUpMushroom();
+            }
         }
     }
     onkeydownHandle(e: KeyboardEvent): void {
@@ -162,7 +165,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
                     break;
                 case 74:
                     if ( this.isFireBullets() ) {
-                        this.firingBullets();
+                        this.createBullets();
                     }
                     break;
                 case 75:
@@ -305,7 +308,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
             }
         }, 40);
     }
-    firingBullets() {
+    createBullets() {
         const _self = this;
         const { toward, left, top } = this.state;
         const { addBullet } = this.props.store;
@@ -328,6 +331,18 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
                 _self.canFiringBullets = true;
             }, 100);
         }
+    }
+    createGrowUpMushroom() {
+        const { addDynamicSquare } = this.props.store;
+        addDynamicSquare({
+            type: 1,
+            status: 0,
+            toward: 1,
+            position: {
+                left: 416,
+                top: 256
+            }
+        });
     }
     statusListening(): void {
         const { status } = this.state;
@@ -370,7 +385,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
     isHitLeftEdge(): boolean {
         const { inGameGBLeft } = this.props.store;
         const { left } = this.state;
-        return Math.abs(inGameGBLeft) === left - 10;
+        return Math.abs(inGameGBLeft) >= left - 10;
     }
     isFireBullets(): boolean {
         const { status } = this.state;

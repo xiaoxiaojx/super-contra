@@ -8,6 +8,7 @@ import CheeseBodyRight from "./cheeseBodyRight";
 import CheeseHeadLeft from "./cheeseHeadLeft";
 import CheeseHeadRight from "./cheeseHeadRight";
 import StepsFloor from "./stepsFloor";
+import MushWall from "./mushWall";
 // import {
 //     SuperContraStore
 // } from "../../../store";
@@ -63,6 +64,10 @@ class Square extends React.PureComponent<SquareProps, {}> {
                 {
                     squareSpecies === 8 &&
                     <StepsFloor />
+                }
+                {
+                    squareSpecies === 9 &&
+                    <MushWall status={squareStatus}/>
                 }
             </div>
         );

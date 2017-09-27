@@ -14,6 +14,7 @@ import "./index.scss";
 
 interface WrappedDynamicSquareUtils {
     changeBackground: (parm: DynamicSquareOption) => void;
+    startBirthAnimate: () => void;
 }
 
 export interface DynamicSquareOption {
@@ -26,6 +27,7 @@ export interface DynamicSquareProps {
 }
 
 interface HocSquareState {
+    className: "dynamicHocWrap" | "dynamicHocWrap birthAnimate";
     options: DynamicSquareOption;
     status: ContraDirectionType;
 }
@@ -37,8 +39,14 @@ interface ComponentDecorator<TOwnProps> {
 function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDecorator<TOwnProps> {
     return Component =>
         class HocSquare extends React.Component<TOwnProps, HocSquareState> {
+            constructor(props) {
+                super(props);
+                this.changeBackground = this.changeBackground.bind(this);
+                this.startBirthAnimate = this.startBirthAnimate.bind(this);
+            }
             static displayName: string = `Hoc${getDisplayName(Component)}`;
-            state = {
+            state: HocSquareState = {
+                className: "dynamicHocWrap",
                 options,
                 status: 0
             };
@@ -51,7 +59,10 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 this.destroy();
             }
             autoMove() {
-                this.initStatus();
+                const _self = this;
+                setTimeout(() => {
+                    _self.initStatus();
+                }, 1000);
             }
             setLeftGradient(step: number): void {
                 const { updatePosition, index, position } = this.props as any;
@@ -65,15 +76,11 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
             }
             toRight(): void {
                 const _self = this;
-                const { inGameGBLeft } = this.props as any;
                 this.clearMoveInterval();
                 this.moveInterval = setInterval(() => {
                     const { position } = _self.props as any;
                     const { left, top } = position;
-                    if ( left < inGameGBLeft || left > inGameGBLeft + 512 ) {
-                        _self.destroy();
-                    }
-                    else if (_self.isHitBottomWall(left, top) && !isHitWall(left + 32, top)) {
+                    if (_self.isHitBottomWall(left, top) && !isHitWall(left + 32, top)) {
                         _self.setLeftGradient(2);
                     }
                     else if (isHitWall(left + 32, top)) {
@@ -91,7 +98,7 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 this.moveInterval = setInterval(() => {
                     const { position } = _self.props as any;
                     const { left, top } = position;
-                    if ( left < inGameGBLeft || left > inGameGBLeft + 512 ) {
+                    if ( left < inGameGBLeft) {
                         _self.destroy();
                     }
                     else if (_self.isHitBottomWall(left, top) && !isHitWall(left, top)) {
@@ -161,6 +168,7 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 const { deleteDynamicSquare, index } = this.props as any;
                 this.clearMoveInterval();
                 deleteDynamicSquare(index);
+                console.log("one enemy destroy...");
             }
             clearMoveInterval(): void {
                 if (this.moveInterval) {
@@ -171,20 +179,26 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
             changeBackground(parm: DynamicSquareOption): void {
                 this.setOptions(parm);
             }
+            startBirthAnimate() {
+                this.setState({
+                    className: "dynamicHocWrap birthAnimate"
+                });
+            }
             render() {
                 const passThroughProps: any = this.props;
                 const { position } = passThroughProps;
                 const { left, top } = position;
-                const { options } = this.state;
+                const { options, className } = this.state;
                 const staticProps: WrappedDynamicSquareUtils = {
-                    changeBackground: this.changeBackground
+                    changeBackground: this.changeBackground,
+                    startBirthAnimate: this.startBirthAnimate
                 };
                 const imageStyles = getImageStyles(options);
                 const styles = {...imageStyles, left, top};
 
                 return (
                     <div
-                        className="dynamicHocWrap"
+                        className={className}
                         style={styles}>
                         <Component
                             hoc={staticProps}

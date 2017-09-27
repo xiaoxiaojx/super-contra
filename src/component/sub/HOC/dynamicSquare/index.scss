@@ -6,3 +6,12 @@
     height: $eachHeight;
     background-repeat: no-repeat;
 }
+
+@keyframes birth { 
+    0% { margin-top: 32px; } 
+    100% { margin-top: 0px; } 
+}
+
+.birthAnimate {
+    animation: birth 0.5s 1; 
+} 

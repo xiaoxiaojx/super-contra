@@ -7,30 +7,23 @@ import {
     StaticSquareProps,
     StaticSquareOption
 } from "../../HOC";
-import "./index.scss";
 
-interface QuestionWallProps {
+interface MushWallProps {
     status: StaticSquareStatusType;
 }
 
-class QuestionWall extends React.Component< QuestionWallProps & StaticSquareProps , {}> {
+class MushWall extends React.Component< MushWallProps & StaticSquareProps , {}> {
     componentWillReceiveProps(nextProps) {
         if ( nextProps.status === 1 && this.props.status !== nextProps.status ) {
-            this.props.hoc.toTopAnimate();
             this.props.hoc.changeBackground({
                 position: "-64px -288px",
                 imageName: "base.png"
             });
         }
     }
-    shouldComponentUpdate(nextProps) {
-        return this.props.status !== nextProps.status ;
-    }
-
     render() {
-        console.log("QuestionWall update...");
         return (
-            <div className="normalFloorWrap">
+            <div className="mushWallWrap">
             </div>
         );
     }
@@ -40,6 +33,6 @@ const defaultOption: StaticSquareOption = {
     imageName: "wen.gif"
 };
 
-const QuestionWallWrap = WithStaticSquare<QuestionWallProps>(defaultOption)(QuestionWall);
+const MushWallWrap = WithStaticSquare<MushWallProps>(defaultOption)(MushWall);
 
-export default QuestionWallWrap;
+export default MushWallWrap;

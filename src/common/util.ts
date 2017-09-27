@@ -5,7 +5,8 @@ import {
     LevelType,
     StaticSquareSpeciesType,
     StaticSquareManagementType,
-    GetHitWallType
+    GetHitWallType,
+    SquareHitType
 } from "./constant";
 
 export function isHitWall (x: number, y: number): boolean {
@@ -22,6 +23,35 @@ export function isHitWall (x: number, y: number): boolean {
 export function isBeyondBottom(y: number): boolean {
     const col = y - 1 % 32 === 0 ? y - 1 / 32 : Math.floor(y / 32);
     return col >= levelOneMap.length;
+}
+
+export function isHit(m: SquareHitType, n: SquareHitType): boolean {
+    let returnValue = false;
+    if (m.left < n.left) {
+        if (m.top < n.top) {
+            if (m.left + m.width >= n.left && m.top + m.height >= n.top) {
+                returnValue = true;
+            }
+        }
+        else {
+            if (m.left + m.width >= n.left && n.top + n.height >= m.top) {
+                returnValue = true;
+            }
+        }
+    }
+    else {
+        if (m.top < n.top) {
+            if (m.left <= n.left + n.width && m.top + m.height > n.top) {
+                returnValue = true;
+            }
+        }
+        else {
+            if (n.left + n.width >= m.left && n.top + n.height >= m.top) {
+                returnValue = true;
+            }
+        }
+    }
+    return returnValue;
 }
 
 export function getHitWall (x: number, y: number): GetHitWallType {

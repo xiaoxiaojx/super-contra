@@ -83,7 +83,7 @@ var config = {
                 })
             },
             {
-                test: /\.(jpe?g|png|gif|svg|ico)$/i,
+                test: /\.(jpe?g|png|gif|svg)$/i,
                 use: "url-loader?limit=10000&name=images/[hash:8].[name].[ext]"
             }, {
                 test: /\.html$/,

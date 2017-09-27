@@ -7,6 +7,7 @@ import {
     PositionType
 } from "../../../common/constant";
 import Mushroom from "./mushroom";
+import GrowUpMushroom from "./growUpMushroom";
 
 interface EnemyProps {
     store: SuperContraStore;
@@ -28,6 +29,16 @@ class Enemy extends React.Component<EnemyProps, {}> {
                         switch (item.type) {
                             case 0 :
                                 return <Mushroom
+                                    index={index}
+                                    key={`Mushroom-${index}`}
+                                    status={status}
+                                    toward={toward}
+                                    position={position}
+                                    updatePosition={this.updatePosition.bind(this)}
+                                    inGameGBLeft={inGameGBLeft}
+                                    deleteDynamicSquare={deleteDynamicSquare} />;
+                            case 1 :
+                                return <GrowUpMushroom
                                     index={index}
                                     key={`Mushroom-${index}`}
                                     status={status}

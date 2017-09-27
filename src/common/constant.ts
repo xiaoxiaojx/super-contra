@@ -21,11 +21,13 @@ export enum StaticSquareSpeciesType {
     "cheeseHeadLeft",
     "cheeseHeadRight",
     "cheeseBodyLeft",
-    "cheeseBodyRight"
+    "cheeseBodyRight",
+    "mushWall"
 }
 
 export enum DynamicSquareSpeciesType {
-    "mushroom"
+    "mushroom",
+    "growUpMushroom"
 }
 
 export enum MushroomStatusType {
@@ -89,6 +91,13 @@ export interface ParabolaParmType {
     b: number;
     step: number;
     stepVal: number;
+}
+
+export interface SquareHitType {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
 }
 
 export interface ContraConfigType {
