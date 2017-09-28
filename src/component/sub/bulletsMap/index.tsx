@@ -5,12 +5,12 @@ import {
     SuperContraStore
 } from "../../../store";
 
-interface BulletsProps {
+interface BulletsMapProps {
     store: SuperContraStore;
 }
 
 @observer
-class Bullets extends React.PureComponent<BulletsProps, {}> {
+class BulletsMap extends React.PureComponent<BulletsMapProps, {}> {
     render() {
         const { store } = this.props;
         const { bulletMap } = store;
@@ -35,4 +35,4 @@ class Bullets extends React.PureComponent<BulletsProps, {}> {
     }
 }
 
-export default Bullets;
+export default BulletsMap;

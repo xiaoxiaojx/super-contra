@@ -4,19 +4,6 @@
     top: 0px;
     height: 100%;
 
-    .gameBackground {
-        position: fixed;
-        top: 100px;
-        left: 30%;;
-        z-index: 1;
-        background-image: url(../../../image/bg.jpg);
-    
-        .col {
-            display: flex;
-            justify-content: flex-start;
-        }
-    }
-
     .gameContent {
         position: relative;
         z-index: 2;

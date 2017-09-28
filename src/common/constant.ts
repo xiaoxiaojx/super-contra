@@ -74,6 +74,12 @@ export enum BulletStatusType {
     "death"
 }
 
+export enum LifeStatusType {
+    "normal",
+    "receive mushrooms",
+    "death"
+}
+
 export type LevelType = 1 | 2 | 3 | 4 | 5;
 
 export type GetHitWallType = boolean | {
@@ -123,4 +129,19 @@ export interface BulletManagementType {
     left: number;
     top: number;
     toward: TowardType;
+}
+
+export interface ContraInfoType {
+    position: PositionType;
+    lifeStatus: LifeStatusType;
+}
+
+export interface NormalEnemyProps {
+    index: number;
+    dynamicData: DynamicSquareManagementType;
+    inGameGBLeft: number;
+    contraInfo: ContraInfoType;
+    updatePosition: (position: PositionType, index: number) => void;
+    deleteDynamicSquare: (parm: number) => void;
+    updateContraLifeStatus: (parm: LifeStatusType) => void;
 }

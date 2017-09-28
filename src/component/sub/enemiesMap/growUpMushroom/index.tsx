@@ -5,20 +5,8 @@ import {
     DynamicSquareOption
 } from "../../HOC";
 import {
-    DynamicSquareStatusType,
-    TowardType,
-    PositionType
+    NormalEnemyProps as GrowUpMushroomProps
 } from "../../../../common/constant";
-
-interface GrowUpMushroomProps {
-    index: number;
-    status: DynamicSquareStatusType;
-    toward: TowardType;
-    position: PositionType;
-    inGameGBLeft: number;
-    updatePosition: (position: PositionType, index: number) => void;
-    deleteDynamicSquare: (parm: number) => void;
-}
 
 class GrowUpMushroom extends React.Component<GrowUpMushroomProps & DynamicSquareProps, {}> {
     componentDidMount() {

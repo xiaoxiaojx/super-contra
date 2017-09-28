@@ -6,6 +6,9 @@ import {
     StaticSquareStatusType,
     BulletManagementType,
     DynamicSquareManagementType,
+    ContraInfoType,
+    PositionType,
+    LifeStatusType
 } from "../../common/constant";
 import {
     getStaticSquareMap
@@ -72,6 +75,20 @@ class SuperContraStore {
     }
     @action.bound public deleteBullet (parm: number) {
         this.bulletMap[parm] = null;
+    }
+
+    @observable public contraInfo: ContraInfoType = {
+        position: {
+            left: 0,
+            top: 0
+        },
+        lifeStatus: 0
+    };
+    @action.bound public updateContraPosition(parm: Partial<PositionType>) {
+        this.contraInfo.position = { ...this.contraInfo.position, ...parm };
+    }
+    @action.bound public updateContraLifeStatus(parm: LifeStatusType) {
+        this.contraInfo.lifeStatus = parm;
     }
 }
 

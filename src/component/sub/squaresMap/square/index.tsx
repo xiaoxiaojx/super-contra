@@ -1,21 +1,21 @@
 import * as React from "react";
 //  import { observer } from "mobx-react";
-import QuestionWall from "./questionWall";
-import NormalWall from "./normalWall";
-import NormalFloor from "./normalFloor";
-import CheeseBodyLeft from "./cheeseBodyLeft";
-import CheeseBodyRight from "./cheeseBodyRight";
-import CheeseHeadLeft from "./cheeseHeadLeft";
-import CheeseHeadRight from "./cheeseHeadRight";
-import StepsFloor from "./stepsFloor";
-import MushWall from "./mushWall";
+import QuestionWall from "../questionWall";
+import NormalWall from "../normalWall";
+import NormalFloor from "../normalFloor";
+import CheeseBodyLeft from "../cheeseBodyLeft";
+import CheeseBodyRight from "../cheeseBodyRight";
+import CheeseHeadLeft from "../cheeseHeadLeft";
+import CheeseHeadRight from "../cheeseHeadRight";
+import StepsFloor from "../stepsFloor";
+import MushWall from "../mushWall";
 // import {
 //     SuperContraStore
 // } from "../../../store";
 import {
     StaticSquareSpeciesType,
     StaticSquareStatusType
-} from "../../../common/constant";
+} from "../../../../common/constant";
 import "./index.scss";
 
 interface SquareProps {

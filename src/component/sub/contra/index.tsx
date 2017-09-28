@@ -23,6 +23,7 @@ interface ContraState {
     toward: TowardType;
     left: number;
     top: number;
+    receiveMushrooms: boolean;
 }
 
 interface ContraProps {
@@ -43,6 +44,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         left: 0,
         top: 384,
         toward: 1,
+        receiveMushrooms: false
     };
     config: ContraConfigType = {
         directionTendency: 0,
@@ -66,9 +68,17 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
     componentWillUnmount() {
         this.destroy();
     }
+    componentWillReceiveProps(nextProps: ContraProps) {
+        const { contraInfo } = nextProps.store;
+        console.log(this.props.store.contraInfo.lifeStatus);
+        if ( contraInfo.lifeStatus === 1 && this.props.store.contraInfo.lifeStatus === 0 ) {
+            this.updateReceiveMushrooms(true);
+        }
+    }
     shouldComponentUpdate(nextProps, nextState) {
         const { status, left, top, toward } = this.state;
-        this.updateLeftListening(nextState);
+        this.autoUpdateInGameGBLeft(nextState);
+        this.autoUpdateContraPosition(nextState);
         return nextState.status !== status ||
             nextState.left !== left ||
             nextState.top !== top ||
@@ -128,11 +138,21 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         });
         return isTop;
     }
-    updateLeftListening(nextState): void {
+    autoUpdateInGameGBLeft(nextState): void {
         if ( nextState.left % 512 >= 490 &&  this.state.left > 0 && (this.state.status === 1 || this.state.status === 5)) {
             const { updateInGameGBLeft } = this.props.store;
             updateInGameGBLeft();
         }
+    }
+    autoUpdateContraPosition(nextState): void {
+        const { left, top } = this.state;
+        const { updateContraPosition } = this.props.store;
+        if ( nextState.left !== left || nextState.top !== top) {
+            updateContraPosition({left, top});
+        }
+    }
+    updateReceiveMushrooms(parm: boolean) {
+        this.setState({ receiveMushrooms: parm });
     }
     updateHitWallStatus(): void {
         const { updateStaticSquareMap, staticSquareMap } = this.props.store;
@@ -152,7 +172,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         }
     }
     onkeydownHandle(e: KeyboardEvent): void {
-        const { status } = this.state;
+        const { status, receiveMushrooms } = this.state;
         const { directionTendency } = this.config;
         const keyCode: KeyCodeType = e.keyCode;
         if (status === 0 || status === 1 || status === 2 ) {
@@ -164,7 +184,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
                     this.setStatus(2);
                     break;
                 case 74:
-                    if ( this.isFireBullets() ) {
+                    if ( receiveMushrooms && this.isFireBullets() ) {
                         this.createBullets();
                     }
                     break;

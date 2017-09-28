@@ -5,10 +5,12 @@ import {
 } from "../util";
 import {
     ContraDirectionType,
+    NormalEnemyProps
 } from "../../../../common/constant";
 import {
     isHitWall,
-    isBeyondBottom
+    isBeyondBottom,
+    isHit
 } from "../../../../common/util";
 import "./index.scss";
 
@@ -36,9 +38,9 @@ interface ComponentDecorator<TOwnProps> {
     (component: React.ComponentClass<DynamicSquareProps & TOwnProps>): React.ComponentClass<TOwnProps>;
 }
 
-function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDecorator<TOwnProps> {
+function WithDynamicSquare<TOwnProps extends Partial<NormalEnemyProps>>(options: DynamicSquareOption): ComponentDecorator<TOwnProps> {
     return Component =>
-        class HocSquare extends React.Component<TOwnProps, HocSquareState> {
+        class HocSquare extends React.PureComponent<TOwnProps, HocSquareState> {
             constructor(props) {
                 super(props);
                 this.changeBackground = this.changeBackground.bind(this);
@@ -58,6 +60,32 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
             componentWillUnmount() {
                 this.destroy();
             }
+            componentWillUpdate(nextProps) {
+                this.isHitContra(nextProps);
+            }
+            isHitContra(nextProps: TOwnProps) {
+                const { dynamicData, contraInfo, updateContraLifeStatus } = nextProps;
+                const contraPosition = contraInfo.position;
+                const { position, type } = dynamicData;
+                const m = {
+                    left: contraPosition.left,
+                    top: contraPosition.top,
+                    width: 32,
+                    height: 32
+                };
+                const n = {
+                    left: position.left,
+                    top: position.top,
+                    width: 32,
+                    height: 32
+                };
+                const hasHit: boolean = isHit(m, n);
+                if ( hasHit && type === 1 ) {
+                    updateContraLifeStatus(1);
+                    this.destroy();
+                }
+                return hasHit;
+            }
             autoMove() {
                 const _self = this;
                 setTimeout(() => {
@@ -65,12 +93,14 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 }, 1000);
             }
             setLeftGradient(step: number): void {
-                const { updatePosition, index, position } = this.props as any;
+                const { updatePosition, index, dynamicData } = this.props;
+                const { position } = dynamicData;
                 const currentPosition = Object.assign({}, position, {left: position.left + step});
                 updatePosition(currentPosition, index);
             }
             setTopGradient(step: number): void {
-                const { updatePosition, index, position } = this.props as any;
+                const { updatePosition, index, dynamicData } = this.props;
+                const { position } = dynamicData;
                 const currentPosition = Object.assign({}, position, {top: position.top + step});
                 updatePosition(currentPosition, index);
             }
@@ -78,7 +108,8 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 const _self = this;
                 this.clearMoveInterval();
                 this.moveInterval = setInterval(() => {
-                    const { position } = _self.props as any;
+                    const { dynamicData } = _self.props;
+                    const { position } = dynamicData;
                     const { left, top } = position;
                     if (_self.isHitBottomWall(left, top) && !isHitWall(left + 32, top)) {
                         _self.setLeftGradient(2);
@@ -93,10 +124,11 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
             }
             toLeft(): void {
                 const _self = this;
-                const { inGameGBLeft } = this.props as any;
+                const { inGameGBLeft } = this.props;
                 this.clearMoveInterval();
                 this.moveInterval = setInterval(() => {
-                    const { position } = _self.props as any;
+                    const { dynamicData } = _self.props;
+                    const { position } = dynamicData;
                     const { left, top } = position;
                     if ( left < inGameGBLeft) {
                         _self.destroy();
@@ -116,7 +148,8 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 const _self = this;
                 this.clearMoveInterval();
                 this.moveInterval = setInterval(() => {
-                    const { position } = _self.props as any;
+                    const { dynamicData } = _self.props;
+                    const { position } = dynamicData;
                     const { top } = position;
                     if ( isBeyondBottom(top + 32) ) {
                         _self.destroy();
@@ -130,14 +163,16 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 }, 30);
             }
             isHitBottomWall(x: number = 0, y: number = 0): boolean {
-                const { position } = this.props as any;
+                const { dynamicData } = this.props;
+                const { position } = dynamicData;
                 const { left, top } = position;
                 const currentX = x ? x : left;
                 const currentY = y ? y : top;
                 return isHitWall(currentX, currentY + 32) || isHitWall(currentX + 32, currentY + 32);
             }
             initStatus() {
-                const { toward } = this.props as any;
+                const { dynamicData } = this.props;
+                const { toward } = dynamicData;
                 const status = toward === 1 ? 1 : 2;
                 this.setStatus(status);
             }
@@ -165,7 +200,7 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
                 }
             }
             destroy() {
-                const { deleteDynamicSquare, index } = this.props as any;
+                const { deleteDynamicSquare, index } = this.props;
                 this.clearMoveInterval();
                 deleteDynamicSquare(index);
                 console.log("one enemy destroy...");
@@ -186,8 +221,8 @@ function WithDynamicSquare<TOwnProps>(options: DynamicSquareOption): ComponentDe
             }
             render() {
                 const passThroughProps: any = this.props;
-                const { position } = passThroughProps;
-                const { left, top } = position;
+                const { dynamicData } = passThroughProps;
+                const { left, top } = dynamicData.position;
                 const { options, className } = this.state;
                 const staticProps: WrappedDynamicSquareUtils = {
                     changeBackground: this.changeBackground,
