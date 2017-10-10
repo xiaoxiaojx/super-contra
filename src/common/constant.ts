@@ -142,6 +142,7 @@ export interface NormalEnemyProps {
     inGameGBLeft: number;
     contraInfo: ContraInfoType;
     updatePosition: (position: PositionType, index: number) => void;
+    updateGameStatus: (parm: GameStatusType) => void;
     deleteDynamicSquare: (parm: number) => void;
     updateContraLifeStatus: (parm: LifeStatusType) => void;
 }

@@ -13,26 +13,29 @@ interface EnemiesMapProps {
 }
 
 @observer
-class EnemiesMap extends React.PureComponent<EnemiesMapProps, {}> {
+class EnemiesMap extends React.Component<EnemiesMapProps, {}> {
     updatePosition(position: PositionType, index: number): void {
         const { updateDynamicSquare } = this.props.store;
         updateDynamicSquare({position}, index);
     }
     render() {
-        const { dynamicSquareMap, inGameGBLeft, deleteDynamicSquare, contraInfo, updateContraLifeStatus } = this.props.store;
+        const { dynamicSquareMap, inGameGBLeft, deleteDynamicSquare, contraInfo, updateContraLifeStatus, updateGameStatus } = this.props.store;
         return (
             <div>
                 {
                     dynamicSquareMap.map((item, index) => {
-                        return <Enemy
-                            index={index}
-                            key={`Mushroom-${index}`}
-                            dynamicData={item}
-                            contraInfo={contraInfo}
-                            inGameGBLeft={inGameGBLeft}
-                            deleteDynamicSquare={deleteDynamicSquare}
-                            updateContraLifeStatus={updateContraLifeStatus}
-                            updatePosition={this.updatePosition.bind(this)} />;
+                        return item ?
+                            <Enemy
+                                index={index}
+                                key={`Mushroom-${index}`}
+                                dynamicData={item}
+                                contraInfo={contraInfo}
+                                inGameGBLeft={inGameGBLeft}
+                                deleteDynamicSquare={deleteDynamicSquare}
+                                updateGameStatus={updateGameStatus}
+                                updateContraLifeStatus={updateContraLifeStatus}
+                                updatePosition={this.updatePosition.bind(this)} />
+                            : null;
                     })
                 }
             </div>

@@ -7,6 +7,9 @@ import {
     BulletStatusType,
     TowardType
 } from "../../../../common/constant";
+import {
+    isHit
+} from "../../../../common/util";
 import "./index.scss";
 
 interface BulletProps {
@@ -48,10 +51,35 @@ class Bullet extends React.Component<BulletProps, BulletState> {
     }
     shouldComponentUpdate(nextProps, nextState) {
         const { status, left, top, toward } = this.state;
+        this.handleHitDynamicSquare(nextState);
         return nextState.status !== status ||
             nextState.left !== left ||
             nextState.top !== top ||
             nextState.toward !== toward;
+    }
+    handleHitDynamicSquare(nextState: BulletState) {
+        const { dynamicSquareMap, deleteDynamicSquare } = this.props.store;
+        const n = {
+            left: nextState.left,
+            top: nextState.top,
+            width: 8,
+            height: 8
+        };
+        dynamicSquareMap.forEach((dynamic, index) => {
+            if (dynamic) {
+                const { position } = dynamic;
+                const m = {
+                    left: position.left,
+                    top: position.top,
+                    width: 32,
+                    height: 32
+                };
+                if (isHit(m, n)) {
+                    this.destroy();
+                    deleteDynamicSquare(index);
+                }
+            }
+        });
     }
     setLeft() {
         const { toward } = this.state;

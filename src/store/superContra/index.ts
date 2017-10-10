@@ -19,6 +19,7 @@ useStrict(true);
 class SuperContraStore {
     constructor() {
         this.staticSquareMap = getStaticSquareMap(this.level);
+        this.autoAddDynamicSquare();
     }
 
     private canUpdateInGameGBLeft: boolean = true;
@@ -39,6 +40,8 @@ class SuperContraStore {
             const _self = this;
             this.canUpdateInGameGBLeft = false;
             this.inGameGBLeft -= 512;
+            this.autoAddDynamicSquare();
+
             setTimeout(() => {
                 _self.canUpdateInGameGBLeft = true;
             }, 2000);
@@ -53,15 +56,61 @@ class SuperContraStore {
         }
     }
 
-    @observable public dynamicSquareMap: DynamicSquareManagementType[] = [];
+    @observable public dynamicSquareMap: Array<DynamicSquareManagementType | null> = [];
     @action.bound public  addDynamicSquare (parm: DynamicSquareManagementType) {
         this.dynamicSquareMap.push(parm);
     }
     @action.bound public deleteDynamicSquare (parm: number) {
-        this.dynamicSquareMap.splice(parm, 1);
+        this.dynamicSquareMap.splice(parm, 1, null);
     }
     @action.bound public updateDynamicSquare (parm: Partial<DynamicSquareManagementType>, index: number) {
         this.dynamicSquareMap[index] = Object.assign({}, this.dynamicSquareMap[index], parm);
+    }
+    private autoAddDynamicSquare() {
+        if ( this.inGameGBLeft === 0 ) {
+            this.createMushRoom({
+                left: 640,
+                top: 384
+            });
+        } else if ( this.inGameGBLeft === -512 ) {
+            this.createMushRoom({
+                left: 736,
+                top: 384
+            });
+        } else if ( this.inGameGBLeft === -1024 ) {
+            this.createMushRoom({
+                left: 1056,
+                top: 384
+            });
+            this.createMushRoom({
+                left: 1216,
+                top: 384
+            });
+        }
+        else if ( this.inGameGBLeft === -1536 ) {
+            this.createMushRoom({
+                left: 1984,
+                top: 136
+            });
+            this.createMushRoom({
+                left: 2016,
+                top: 136
+            });
+        }
+        else if ( this.inGameGBLeft === -2048 ) {
+            this.createMushRoom({
+                left: 2144,
+                top: 384
+            });
+        }
+    }
+    private createMushRoom(position: PositionType) {
+        this.addDynamicSquare({
+            type: 0,
+            status: 0,
+            toward: 0,
+            position
+        });
     }
 
     @observable public bulletMap: Array<BulletManagementType | null> = Array(10).fill(null);

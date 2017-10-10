@@ -45,14 +45,16 @@ function WithDynamicSquare<TOwnProps extends Partial<NormalEnemyProps>>(options:
                 super(props);
                 this.changeBackground = this.changeBackground.bind(this);
                 this.startBirthAnimate = this.startBirthAnimate.bind(this);
+                this.destroy = this.destroy.bind(this);
             }
             static displayName: string = `Hoc${getDisplayName(Component)}`;
             state: HocSquareState = {
                 className: "dynamicHocWrap",
                 options,
-                status: 0
+                status: 0,
             };
             moveInterval: any;
+            stopListening: boolean = false;
 
             componentDidMount() {
                 this.autoMove();
@@ -61,10 +63,10 @@ function WithDynamicSquare<TOwnProps extends Partial<NormalEnemyProps>>(options:
                 this.destroy();
             }
             componentWillUpdate(nextProps) {
-                this.isHitContra(nextProps);
+                this.handleHitContra(nextProps);
             }
-            isHitContra(nextProps: TOwnProps) {
-                const { dynamicData, contraInfo, updateContraLifeStatus } = nextProps;
+            handleHitContra(nextProps: TOwnProps) {
+                const { dynamicData, contraInfo, updateContraLifeStatus, updateGameStatus } = nextProps;
                 const contraPosition = contraInfo.position;
                 const { position, type } = dynamicData;
                 const m = {
@@ -80,17 +82,31 @@ function WithDynamicSquare<TOwnProps extends Partial<NormalEnemyProps>>(options:
                     height: 32
                 };
                 const hasHit: boolean = isHit(m, n);
-                if ( hasHit && type === 1 ) {
+                if ( hasHit && !this.stopListening && type === 1 ) {
                     updateContraLifeStatus(1);
                     this.destroy();
                 }
-                return hasHit;
+                else if (hasHit && !this.stopListening && type === 0) {
+                    if (m.top < n.top - 6) {
+                        this.stopListening = true;
+                        this.clearMoveInterval();
+                        this.changeBackground({
+                            imageName: "base.png",
+                            position: "-32px -160px"
+                        }, this.destroy);
+                    } else {
+                        this.stopListening = true;
+                        updateGameStatus(3);
+                    }
+                }
             }
-            autoMove() {
+            autoMove(): void {
                 const _self = this;
+                const { type } = this.props.dynamicData;
+                type === 1 ?
                 setTimeout(() => {
                     _self.initStatus();
-                }, 1000);
+                }, 500) : _self.initStatus();
             }
             setLeftGradient(step: number): void {
                 const { updatePosition, index, dynamicData } = this.props;
@@ -170,16 +186,18 @@ function WithDynamicSquare<TOwnProps extends Partial<NormalEnemyProps>>(options:
                 const currentY = y ? y : top;
                 return isHitWall(currentX, currentY + 32) || isHitWall(currentX + 32, currentY + 32);
             }
-            initStatus() {
+            initStatus(): void {
                 const { dynamicData } = this.props;
                 const { toward } = dynamicData;
                 const status = toward === 1 ? 1 : 2;
                 this.setStatus(status);
             }
-            setOptions(parm: DynamicSquareOption) {
-                this.setState({ options: parm });
+            setOptions(parm: DynamicSquareOption, cb = () => {}): void {
+                this.setState({ options: parm }, () => {
+                    setTimeout(cb, 500);
+                });
             }
-            setStatus(parm: ContraDirectionType) {
+            setStatus(parm: ContraDirectionType): void {
                 this.setState({ status: parm }, this.statusListening);
             }
             statusListening(): void {
@@ -199,11 +217,11 @@ function WithDynamicSquare<TOwnProps extends Partial<NormalEnemyProps>>(options:
                         break;
                 }
             }
-            destroy() {
+            destroy(): void {
                 const { deleteDynamicSquare, index } = this.props;
                 this.clearMoveInterval();
                 deleteDynamicSquare(index);
-                console.log("one enemy destroy...");
+                console.log(`${HocSquare.displayName}-${index} Component destroy...`);
             }
             clearMoveInterval(): void {
                 if (this.moveInterval) {
@@ -211,10 +229,10 @@ function WithDynamicSquare<TOwnProps extends Partial<NormalEnemyProps>>(options:
                     this.moveInterval = 0;
                 }
             }
-            changeBackground(parm: DynamicSquareOption): void {
-                this.setOptions(parm);
+            changeBackground(parm: DynamicSquareOption, cb = () => {}): void {
+                this.setOptions(parm, cb);
             }
-            startBirthAnimate() {
+            startBirthAnimate(): void {
                 this.setState({
                     className: "dynamicHocWrap birthAnimate"
                 });

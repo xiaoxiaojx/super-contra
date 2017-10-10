@@ -23,7 +23,6 @@ interface ContraState {
     toward: TowardType;
     left: number;
     top: number;
-    receiveMushrooms: boolean;
 }
 
 interface ContraProps {
@@ -44,7 +43,6 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         left: 0,
         top: 384,
         toward: 1,
-        receiveMushrooms: false
     };
     config: ContraConfigType = {
         directionTendency: 0,
@@ -67,13 +65,6 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
     }
     componentWillUnmount() {
         this.destroy();
-    }
-    componentWillReceiveProps(nextProps: ContraProps) {
-        const { contraInfo } = nextProps.store;
-        console.log(this.props.store.contraInfo.lifeStatus);
-        if ( contraInfo.lifeStatus === 1 && this.props.store.contraInfo.lifeStatus === 0 ) {
-            this.updateReceiveMushrooms(true);
-        }
     }
     shouldComponentUpdate(nextProps, nextState) {
         const { status, left, top, toward } = this.state;
@@ -151,9 +142,6 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
             updateContraPosition({left, top});
         }
     }
-    updateReceiveMushrooms(parm: boolean) {
-        this.setState({ receiveMushrooms: parm });
-    }
     updateHitWallStatus(): void {
         const { updateStaticSquareMap, staticSquareMap } = this.props.store;
         const { left, top } = this.state;
@@ -172,7 +160,8 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         }
     }
     onkeydownHandle(e: KeyboardEvent): void {
-        const { status, receiveMushrooms } = this.state;
+        const { contraInfo } = this.props.store;
+        const { status } = this.state;
         const { directionTendency } = this.config;
         const keyCode: KeyCodeType = e.keyCode;
         if (status === 0 || status === 1 || status === 2 ) {
@@ -184,7 +173,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
                     this.setStatus(2);
                     break;
                 case 74:
-                    if ( receiveMushrooms && this.isFireBullets() ) {
+                    if ( contraInfo.lifeStatus === 1 && this.isFireBullets() ) {
                         this.createBullets();
                     }
                     break;
@@ -285,7 +274,6 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
             }
             //  向下阶段
             else {
-                isTop = false;
                 if ( isBeyondBottom(_self.state.top + 32) ) {
                     this.destroy();
                 }
@@ -307,7 +295,7 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
         let isTop: boolean = true;
         this.moveInterval = setInterval(() => {
             if ( isTop ) {
-                if (  this.isHitTopWall() || (isHitWall(_self.state.left, _self.state.top + 32) && beforeJumpTop !== _self.state.top) ) {
+                if (  this.isHitTopWall() || (isHitWall(_self.state.left, _self.state.top + 32) && beforeJumpTop !== _self.state.top) || this.isHitLeftEdge() ) {
                     this.setStatus(4);
                 } else {
                     this.setPositionGradient(step);
@@ -315,9 +303,11 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
                 }
             }
             else {
-                isTop = false;
                 if ( isBeyondBottom(_self.state.top + 32) ) {
                     this.destroy();
+                }
+                else if (this.isHitLeftEdge()) {
+                    this.setStatus(4);
                 }
                 else if ( this.isHitBottomWall() ) {
                     this.setStatus(0);

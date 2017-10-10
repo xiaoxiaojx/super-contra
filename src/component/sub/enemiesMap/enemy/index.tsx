@@ -9,13 +9,7 @@ import {
 class Enemy extends React.Component<EnemyProps, {}> {
     render() {
         const {
-            index,
             dynamicData,
-            inGameGBLeft,
-            updatePosition,
-            deleteDynamicSquare,
-            contraInfo,
-            updateContraLifeStatus
         } = this.props;
         const {
             type
@@ -25,26 +19,12 @@ class Enemy extends React.Component<EnemyProps, {}> {
                 {
                     type === 0 &&
                     <Mushroom
-                        index={index}
-                        key={`Mushroom-${index}`}
-                        dynamicData={dynamicData}
-                        contraInfo={contraInfo}
-                        updatePosition={updatePosition}
-                        updateContraLifeStatus={updateContraLifeStatus}
-                        inGameGBLeft={inGameGBLeft}
-                        deleteDynamicSquare={deleteDynamicSquare} />
+                        {...this.props} />
                 }
                 {
                     type === 1 &&
                     <GrowUpMushroom
-                        index={index}
-                        key={`Mushroom-${index}`}
-                        dynamicData={dynamicData}
-                        contraInfo={contraInfo}
-                        updatePosition={updatePosition}
-                        updateContraLifeStatus={updateContraLifeStatus}
-                        inGameGBLeft={inGameGBLeft}
-                        deleteDynamicSquare={deleteDynamicSquare} />
+                        {...this.props} />
                 }
             </div>
         );
