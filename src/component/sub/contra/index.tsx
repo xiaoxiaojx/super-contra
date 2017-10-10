@@ -118,10 +118,10 @@ class Contra extends React.PureComponent<ContraProps, ContraState> {
             const x = preState.left + step;
             const y = status === 5 ? a * step * step + b * step + c : a * step * step + b * Math.abs(step) + c;
             isTop = y < preState.top;
-            if ( !isTop && isBeyondBottom(y + 32) ) {
+            if ( isBeyondBottom(y + 32) ) {
                 this.destroy();
             }
-            else if ( !isTop && this.isHitBottomWall(x, y) && !this.isHitLeftEdge() ) {
+            else if ( this.isHitBottomWall(x, y)) {
                 this.setStatus(4);
                 return ({status: 4});
             }

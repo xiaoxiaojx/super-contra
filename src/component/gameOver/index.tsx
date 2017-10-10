@@ -14,7 +14,8 @@ class GameOver extends React.Component<GameOverProps, {}> {
     render() {
         return (
             <div className="gameOverWrap">
-                GameOver
+                <div className="background"></div>
+                <div className="content">Game Over</div>
             </div>
         );
     }

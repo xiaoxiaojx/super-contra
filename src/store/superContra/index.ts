@@ -39,9 +39,12 @@ class SuperContraStore {
         if ( this.canUpdateInGameGBLeft ) {
             const _self = this;
             this.canUpdateInGameGBLeft = false;
-            this.inGameGBLeft -= 512;
-            this.autoAddDynamicSquare();
-
+            if ( this.inGameGBLeft === -5120 ) {
+                this.updateGameStatus(3);
+            } else {
+                this.inGameGBLeft -= 512;
+                this.autoAddDynamicSquare();
+            }
             setTimeout(() => {
                 _self.canUpdateInGameGBLeft = true;
             }, 2000);
