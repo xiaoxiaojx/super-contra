@@ -10,8 +10,23 @@ SuperContra is a combination of SuperMarie and Contra game
 2. `open dist/index.html in the browser` or
 `yarn -> make dev -> open http://localhost:3333/ in the browser`
 
-#   Some want to say about React write games
+
+## How play
+> 游戏按键如下图
+
+> ![image](https://pic2.zhimg.com/80/v2-1c2f1967b8bb694a8c2fc0083d73d3ea_hd.jpg)
+
+> 顶这个墙出现蘑菇, 此蘑菇接了才可以发子弹
+
+> ![image](https://pic1.zhimg.com/80/v2-b0397d7642f871fe3bc1f197f9edd6fd_hd.jpg)
+
+> 然后你就可以去欺负小蘑菇了
+
+> ![image](https://pic7.zhimg.com/80/v2-103a9596e7a4d4619315915e100cd790_hd.jpg)
+
+##   Some want to say about React write games
 ![image](https://d3hp955ol7sp5f.cloudfront.net/ReactJSstatic/images/webpack/b736f282b84b3f116be4319681af8b94.png)
+
 ### 1. React的优势
 * **数据驱动**, 根据state或者props的变化 => 视图的变化, 以前的方式往往是直接操作 DOM 实现, 触发某事件使得元素移动代码类似如:
 ```
