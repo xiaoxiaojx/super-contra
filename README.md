@@ -102,7 +102,7 @@ SuperContra is a combination of SuperMarie and Contra game
 ```
     飞机继承至飞行物 => 飞行物继承至动态物 => 动态物继承至某一特性物体
 ```
-其中子弹也可以继承至飞行物使得飞行物等可以衍生更多子类。React中各组件只能继承至React.Component,可采用HOC高阶组件思想去渲染一系列具有相似性质的组件。如超级玛丽游戏中有许多的墙,它们具有相似的渲染逻辑,以及一些都会需要用到的方法, 可以通过写一个静态方块的高阶组件去生成, 能够更高效的管理代码。
+其中子弹也可以继承至飞行物使得飞行物等可以衍生更多子类。~~React中各组件只能继承至React.Component~~(当我没说, 是可以继承的),可采用HOC高阶组件思想去渲染一系列具有相似性质的组件。如超级玛丽游戏中有许多的墙,它们具有相似的渲染逻辑,以及一些都会需要用到的方法, 可以通过写一个静态方块的高阶组件去生成, 能够更高效的管理代码。
 ```
 =>
     function WithStaticSquare<TOwnProps>(options: StaticSquareOption):ComponentDecorator<TOwnProps> {
