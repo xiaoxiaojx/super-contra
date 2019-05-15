@@ -25,8 +25,8 @@
   "devDependencies": {
     "@types/express": "^4.0.37",
     "@types/node": "^8.0.25",
-    "@types/react": "^16.0.5",
-    "@types/react-dom": "^15.5.4",
+    "@types/react": "16.0.5",
+    "@types/react-dom": "15.5.4",
     "@types/webpack": "^3.0.10",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -54,7 +54,7 @@
   "dependencies": {
     "mobx": "^3.2.2",
     "mobx-react": "^4.2.2",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react": "16.8.6",
+    "react-dom": "16.8.6"
   }
 }

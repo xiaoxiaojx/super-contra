@@ -5,24 +5,26 @@ import {
     SuperContraStore
 } from "../../../store";
 import "./index.scss";
+import { StaticSquareManagementType } from "src/common/constant";
 
 interface SquaresMapProps {
     store: SuperContraStore;
 }
 
+const LIMIT: number = 16;
+const GAME_WIDTH: number = 512;
+
 @observer
 class SquaresMap extends React.PureComponent<SquaresMapProps, {}> {
     getLazyLoadMap() {
         const { staticSquareMap, inGameGBLeft } = this.props.store;
-        const limit = 16;
-        const offset = Math.abs(inGameGBLeft) / 512 * 16;
-        const initArray = [];
+        const OFFSET = Math.abs(inGameGBLeft) / GAME_WIDTH * LIMIT;
         return staticSquareMap.reduce((preVal, currentVal) => {
             const items = [...currentVal];
-            const current = items.splice(offset, limit);
+            const current = items.splice(OFFSET, LIMIT);
             preVal.push(current);
             return preVal;
-        }, initArray);
+        }, [] as StaticSquareManagementType[][]);
     }
     render() {
         const lazyLoadMap = this.getLazyLoadMap();
@@ -39,7 +41,6 @@ class SquaresMap extends React.PureComponent<SquaresMapProps, {}> {
                                         row={indexY}
                                         squareSpecies={item.type}
                                         squareStatus={item.status}
-                                    //    superContraStore={superContraStore}
                                     />)
                             }
                         </div>

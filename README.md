@@ -1,14 +1,18 @@
 # [SuperContra](https://github.com/xiaoxiaojx/SuperContra)
+> 超级魂斗罗是一个集结了超级马里奥和魂斗罗的小游戏
 
-SuperContra is a combination of SuperMarie and Contra game
+## 技术栈
+**React** **TypeScript** **WebPack** **Mobx** **Scss**
 
-## Technology stack
-**React** **TypeScript** **WebPack**
+## React 版本更新日志 v15.6.1 => v16.8.6
+### v15.6.1版本 优化完成后只会实时更新状态变化的组件, 不会影响其它的渲染, 游戏流畅运行
+![](https://user-gold-cdn.xitu.io/2019/5/15/16abbcf0065dfd30?w=1206&h=964&f=png&s=69812)
 
-## Quick start
-1. `git clone https://github.com/xiaoxiaojx/SuperContra.git`
-2. `open dist/index.html in the browser` or
-`yarn -> make dev -> open http://localhost:3333/ in the browser`
+### v15.6.1版本 顶这个墙全部渲染了一次 ?!
+![](https://user-gold-cdn.xitu.io/2019/5/15/16abbf47e699fd62?w=1070&h=846&f=png&s=273070)
+
+### v16.8.6 顶这个墙依然只渲染状态变化的组件, 游戏更流畅 (得益于 Filber, 以及 Component 的优化)👏
+![](https://user-gold-cdn.xitu.io/2019/5/15/16abbce013a4c392?w=1112&h=962&f=png&s=71418)
 
 
 ## How play
@@ -24,19 +28,19 @@ SuperContra is a combination of SuperMarie and Contra game
 
 > ![image](https://pic7.zhimg.com/80/v2-103a9596e7a4d4619315915e100cd790_hd.jpg)
 
-##   Some want to say about React write games
+## React 写游戏的一些心得
 ![image](https://d3hp955ol7sp5f.cloudfront.net/ReactJSstatic/images/webpack/b736f282b84b3f116be4319681af8b94.png)
 
 ### 1. React的优势
 * **数据驱动**, 根据state或者props的变化 => 视图的变化, 以前的方式往往是直接操作 DOM 实现, 触发某事件使得元素移动代码类似如:
 ```
 =>
-    this.moveRight = () => {
+    moveRight() {
         this.left += 8;
         this.draw();
     }
 
-    this.draw = () => {
+    draw() {
         if(this.ele === null){
             this.ele = document.createElement('img');
             this.ele.src = this.url;
@@ -52,7 +56,7 @@ SuperContra is a combination of SuperMarie and Contra game
 现在就友好很多
 ```
 =>
-    this.moveRight = () => {
+    moveRight() {
         this.setState( preState => (
             {
                 left: preState.left + 8
@@ -137,7 +141,7 @@ SuperContra is a combination of SuperMarie and Contra game
 ### 3. 性能问题
 *   **避免卡顿** 前者直接操作某个DOM渲染不会有太多卡顿现象发生
     React使用Mobx, Redux等进行整个游戏数据控制时, 如果不对渲染进行优化, 当store某个属性值变化导致所有接入props的组件都重新渲染一次代价是巨大的!
-1. 采用PureComponent某些组件需要这样写
+1. 采用 PureComponent 或者为 Component 加入 shouldComponentUpdate
 ```
 =>
     class Square extends React.PureComponent<SquareProps, {}> {
@@ -186,6 +190,25 @@ PureComponent改变了生命周期方法shouldComponentUpdate，并且它会自�
     </InGameBG>
 ``` 
 这两种方法的区别就是在于渲染子弹是否通过组件渲染还是在父组件中直接渲染, 其中方法2的性能会有很大的问题, 当某个子弹变化时使得最大的容器重新渲染, 其中所有子组件也会去判断是否需要重新渲染，使得界面会出现卡顿。而方法1则只会在发生数据变化的子弹去渲染。
+
+3. getLazyLoadMap 对地图的实时切割渲染
+```
+const LIMIT: number = 16;
+const GAME_WIDTH: number = 512;
+
+@observer
+class SquaresMap extends React.PureComponent<SquaresMapProps, {}> {
+    getLazyLoadMap() {
+        const { staticSquareMap, inGameGBLeft } = this.props.store;
+        const OFFSET = Math.abs(inGameGBLeft) / GAME_WIDTH * LIMIT;
+        return staticSquareMap.reduce((preVal, currentVal) => {
+            const items = [...currentVal];
+            const current = items.splice(OFFSET, LIMIT);
+            preVal.push(current);
+            return preVal;
+        }, [] as StaticSquareManagementType[][]);
+    }
+```
 
 ### 4. 需要注意的点
 * **及时移除监听**, 在组件卸载时需要移除该组件的事件监听, 时间函数等。如游戏开始组件
